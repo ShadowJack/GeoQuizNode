@@ -22,7 +22,7 @@ module.exports = (app) ->
   app.all '/', (req, res, next) ->
     routeMvc('index', 'index', req, res, next)
     
-  app.get '/next_image', (req, res, next) ->
+  app.get '/next_picture', (req, res, next) ->
     routeMvc('index', 'next_image', req, res, next)
 
   #   - _/**:controller**_  -> controllers/***:controller***/index method

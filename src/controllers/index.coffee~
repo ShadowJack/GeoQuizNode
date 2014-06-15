@@ -11,7 +11,7 @@ exports.next_image = (req, res) ->
     #page = Math.ceil Math.random()*1000
     options =
       hostname: 'https://api.flickr.com',
-      path: '/services/rest/?format=json&method=flickr.photos.getRecent&per_page=500&extras=geo,url_z&api_key='+api_key
+      path: '/services/rest/?format=json&method=flickr.photos.getRecent&per_page=1000&extras=geo,url_z&api_key='+api_key
     
     console.log 'options: \n' + JSON.stringify options 
     #prepare the request to flickr.api  
@@ -26,7 +26,7 @@ exports.next_image = (req, res) ->
       
       photos = data.photos.photo
       
-      i = Math.floor(Math.random()*500)
+      i = Math.floor(Math.random()*1000)
       console.log photos[i]
       #get the url_z of a random photo
       photo_url = photos[i].url_z
@@ -35,7 +35,7 @@ exports.next_image = (req, res) ->
       res.send photo_url
   else
     console.log 'Photos array is hashed! ' + photos.length 
-    i = Math.floor(Math.random()*500)
+    i = Math.floor(Math.random()*1000)
     #console.log photos
     #get the url_z of a random photo
     photo_url = photos[i].url_z
