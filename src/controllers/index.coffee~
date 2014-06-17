@@ -1,35 +1,57 @@
-api_key = '5b05639ce9be5ae209e85779df2d66dd'
+flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
+geonames_username = 'shadowjack'
 request = require('request')
+
 exports.index = (req, res) ->
     res.render 'index'
     
 exports.load_new_photos = (req, res) ->
   console.log 'Ready to fetch new photos...'
   #fetch the next photo in the array of recent photos from Flickr
-  options =
-    hostname: 'https://api.flickr.com',
-    path: '/services/rest/?format=json&method=flickr.photos.getRecent&page='+req.query.page+'&extras=geo,url_z&api_key='+api_key
+  req_url = 'https://api.flickr.com/services/rest?\
+  format=json&method=flickr.photos.search&tags=nature,city,building,landscape\
+  &content_type=1&has_geo=1&per_page=10&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   
-  #console.log 'options: \n' + JSON.stringify options 
   #prepare the request to flickr.api  
-  request options.hostname+options.path, (err, resp, body) ->
-    data = JSON.parse(body.slice 14, -1)
+  request.get req_url, (err, resp, body) ->
     if err
       console.log 'Error: ' + err
       return
-    #console.log data
-    if (data.stat != "ok")
-      return
-    console.log 'Just added photos to the Photos array. New length: ' + photos.length
-    i = Math.floor(Math.random()*photos.length)
-    #console.log photos[i]
-    #get the url_z of a random photo
-    photo_url = photos[i].url_z
-    #remove showed photo from the array
-    photos.splice i, 1
-    console.log 'Removed one photo from the photos array, new length: ' + photos.length
-    #send the response back to app.coffee, where jQuery asked for data
-    res.send new_photos
+    #console.log body
+#    if (body.stat != "ok")
+#      console.log body.stat
+#      return
+    photos = JSON.parse(String(body).slice 14, -1).photos.photo
+    result = []
+    console.log 'I have got the photos'
+    for photo in photos
+      #get the country by place_id
+      req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
+      uri=' + photo.url_z
+      
+      try
+        request.get req_uri, (error, rsp, data) ->
+          if error
+            console.log 'Error: ' + err
+            return
+          console.log 'I recieved response from geonames:'
+          img_url = (rsp.client._httpMessage.path.match /uri\=.+/)[0].slice 4
+          geo_photo =
+            url: img_url,
+            country: JSON.parse(data).countryName
+          console.log geo_photo
+          result.push geo_photo
+          #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
+          # if we have recieved the last place info - send result to the client
+          if result.length == photos.length
+            console.log "Last geo info recieved: " + result.length
+            res.send result
+      catch e
+        console.log e
+      
+    console.log "I've sent all geo requests and now waiting for responses"
     
-#TODO: в браузере у пользователя хранить номер очередной страницы, с которой будем загружать фото
-# и передавать его в запросе методу load_new_photos
+#TODO: проверять, сколько страниц всего по запросу и следить за тем,
+#чтобы переменная page на клиенте не превышала этого значения
+
+#TODO: test, refactor
