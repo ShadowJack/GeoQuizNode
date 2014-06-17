@@ -11,7 +11,7 @@ $ ->
   
   get_new_photos()
   
-  $('#next').click (event) ->
+  $('#skip').click (event) ->
     if photos.length == 0
       get_new_photos()
       #TODO: заменить на крутящееся колёсико, проверяющее состояние загрузки фото

@@ -7,7 +7,7 @@ $ ->
       page += 1
       photos = photos.concat new_photos
       console.log 'New photos added, and photos.length = ' + photos.length
-      console.log photos
+      #console.log photos
   
   get_new_photos()
   
