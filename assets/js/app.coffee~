@@ -1,6 +1,8 @@
 $ ->
   photos = []
   countries = []
+  score = 0
+  curr_country = ''
   
   get_new_photos = ->
     page = Math.floor(Math.random()*400)
@@ -8,18 +10,12 @@ $ ->
     $.get '/load_new_photos?page='+page, (resp) ->
       photos = photos.concat resp
       console.log 'New photos added, and photos.length = ' + photos.length
-      $('#skip').prop('disabled', false)
-      #
+      disable_buttons(false)
       if $('#photo').attr('src') == ''
         next_photo()
       else if $('#photo').is(':hidden')
         $('#photo').show()
       
-  $('#skip').prop('disabled', true)
-  $('#photo').hide()
-  $.getJSON '/countries.json', (data) ->
-    countries = data["countries"]
-    get_new_photos()
   
   next_photo = ->
     $('#photo').hide()
@@ -29,7 +25,7 @@ $ ->
     console.log 'i: ' + i
     #get the url_z of a random photo
     photo_url = photos[i].url
-    photo_country = photos[i].country
+    curr_country = photos[i].country
     
     #remove new photo from the array of remaining photos
     photos.splice i, 1
@@ -38,16 +34,15 @@ $ ->
       get_new_photos()
   
     
-    console.log "url: " + photo_url + " country: " + photo_country
-    if not photo_country
+    console.log "url: " + photo_url + " country: " + curr_country
+    if not curr_country
       next_photo()
     else
       #get next countries to display on buttons
-      next_countries = [photo_country]
-      console.log 'Ooops!'
+      next_countries = [curr_country]
       while next_countries.length < 4
         country_index = Math.floor Math.random()*countries.length
-        if countries[country_index] != photo_country
+        if countries[country_index] != curr_country
           next_countries.push countries[country_index]
           
       #set the buttons to display new data
@@ -62,11 +57,33 @@ $ ->
         $('#circular').hide()
         $('#photo').show()
   
+  disable_buttons = (enable) ->
+      $('#skip').prop('disabled', enable)
+      $('.btn-choose').prop('disabled', enable)
+  
+  #The begining of the execution
+  disable_buttons(true)
+  $('#photo').hide()
+  $.getJSON '/countries.json', (data) ->
+    countries = data["countries"]
+    get_new_photos()
+  
+  
+  $('.btn-choose').click (event) ->
+    if this.innerHTML == curr_country
+      score += 30
+    else
+      score -= 10
+    console.log 'score: ' + score
+    next_photo()
+  
   $('#skip').click (event) ->
     if photos.length == 0
       $('#skip').prop('disabled', true)
       get_new_photos()
       return false
+    score -= 5
+    console.log 'score: ' + score
     next_photo()
     return true
     

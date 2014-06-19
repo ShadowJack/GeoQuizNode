@@ -20,14 +20,14 @@ block content
         .span12
           .row
             .span6
-              button#btn1.btn.btn-fixwidth.center-block(href="")
+              button#btn1.btn.btn-fixwidth.btn-choose.center-block(href="") *
             .span6
-              button#btn2.btn.btn-fixwidth.center-block(href="")
+              button#btn2.btn.btn-fixwidth.btn-choose.center-block(href="") *
           .row
             .span6
-              button#btn3.btn.btn-fixwidth.center-block(href="")
+              button#btn3.btn.btn-fixwidth.btn-choose.center-block(href="") *
             .span6
-              button#btn4.btn.btn-fixwidth.center-block(href="")
+              button#btn4.btn.btn-fixwidth.btn-choose.center-block(href="") *
       .row
         .span12
           .skip-container

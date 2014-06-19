@@ -36,11 +36,11 @@ h3
 .full-width
   width: 100%
 
-.btn-fixsize
+.btn-fixwidth
   width: 250px
 
 button.btn.btn-fixwidth
-  margin-left: -35px
+  margin-left: -45px
 
 pre
   font-family: courier
