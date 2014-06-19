@@ -33,10 +33,12 @@ $ ->
     if photos.length < 5
       get_new_photos()
     console.log "url: " + photo_url + "country: " + photo_country
-    $('#photo').attr('src', photo_url).on('load', ->
-      $('#circular').hide()
-      $('#photo').show()
-    )
+    if not photo_country
+      next_photo()
+    else
+      $('#photo').attr('src', photo_url).on 'load', ->
+        $('#circular').hide()
+        $('#photo').show()
   
   $('#skip').click (event) ->
     if photos.length == 0
