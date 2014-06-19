@@ -1,11 +1,19 @@
 $ ->
   photos = []
-  page = 0
+  pages = 0
   
   get_new_photos = ->
-    page += 1
-    $.get '/load_new_photos?page='+page, (new_photos) ->
-      photos = photos.concat new_photos
+    #первый раз загружаем первую страницу
+    #page = (pages == 0) ? 1 : Math.floor(Math.random()*pages)
+    if pages == 0
+      page = 1
+    else
+      page = Math.floor(Math.random()*pages)
+    console.log page
+    $.get '/load_new_photos?page='+page, (resp) ->
+      if pages == 0
+        pages = resp.pages
+      photos = photos.concat resp.phs
       console.log 'New photos added, and photos.length = ' + photos.length
       $('#skip').prop('disabled', false)
       #

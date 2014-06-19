@@ -22,7 +22,9 @@ exports.load_new_photos = (req, res) ->
 #      console.log body.stat
 #      return
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
-    result = []
+    result =
+      phs: []
+      pages: 
     console.log 'I have got the photos'
     for photo in photos
       #get the country by place_id
@@ -40,7 +42,7 @@ exports.load_new_photos = (req, res) ->
             url: img_url,
             country: JSON.parse(data).countryName
           console.log geo_photo
-          result.push geo_photo
+          result.phs.push geo_photo
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           # if we have recieved the last place info - send result to the client
           if result.length == photos.length
@@ -51,13 +53,10 @@ exports.load_new_photos = (req, res) ->
       
     console.log "I've sent all geo requests and now waiting for responses"
     
-#TODO: проверять, сколько страниц всего по запросу и следить за тем,
-#чтобы переменная page на клиенте не превышала этого значения
-
+#TODO: получать pages от flickr и потом при очередной загрузке выбирать рандомную страницу
 #TODO: test, refactor
-
-#TODO: на клиенте: если не пришла информация по стране фотографии, то не показывать её
-
-#TODO: отцентровать кнопку "Пропустить"
-
+#TODO: отображение вариантов выбора
 #TODO: хранить page на сервере, каждый день можно его сбрасывать
+#TODO: варьировать запросы
+
+
