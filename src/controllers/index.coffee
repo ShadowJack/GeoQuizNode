@@ -34,14 +34,18 @@ exports.load_new_photos = (req, res) ->
           if error
             console.log 'Error: ' + err
             return
+            
           console.log 'I recieved response from geonames:'
           img_url = (rsp.client._httpMessage.path.match /uri\=.+/)[0].slice 4
+          
           geo_photo =
             url: img_url,
             country: JSON.parse(data).countryName
           console.log geo_photo
           result.push geo_photo
+          
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
+          
           # if we have recieved the last place info - send result to the client
           if result.length == photos.length
             console.log "Last geo info recieved: " + result.length
@@ -52,15 +56,14 @@ exports.load_new_photos = (req, res) ->
     console.log "I've sent all geo requests and now waiting for responses"
     
 #TODO: отображение вариантов выбора
-#   1. Список всех стран - на клиенте
+#   1. Список всех стран - на клиенте +
 #   2. Выбираем три произвольные, при этом проверяя,
-#   что в них не входит страна на фотографии
-#   3. В произвольном порядке закрепляем за ними кнопки
+#   что в них не входит страна на фотографии +
+#   3. В произвольном порядке закрепляем за ними кнопки +
 #   4. Вводим переменную со счётом(в будущем получаем с сервера vk.com)
 #   5. Обрабатываем нажатие на одну из кнопок
 
 #TODO: оптимизировать запрос так, чтобы страны вырьировались сильнее
-
 #TODO: test, refactor
 #TODO: варьировать запросы
 
