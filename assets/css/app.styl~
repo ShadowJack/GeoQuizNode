@@ -19,7 +19,8 @@ h3
   
 .photo-container
   width: 640px
-  height: 400px 
+  height: 400px
+  position: relative
 
 #photo
   max-height: 400px
@@ -36,10 +37,10 @@ h3
   width: 100%
 
 .btn-fixwidth
-  width: 100px
+  width: 250px
 
 button.btn.btn-fixwidth
-  margin-left: 25px
+  margin-left: -40px
 
 pre
   font-family: courier

@@ -1,31 +1,25 @@
 $ ->
   photos = []
-  pages = 0
+  countries = []
   
   get_new_photos = ->
-    #первый раз загружаем первую страницу
-    #page = (pages == 0) ? 1 : Math.floor(Math.random()*pages)
-    if pages == 0
-      page = Math.floor(Math.random()*1000)
-    else
-      page = Math.floor(Math.random()*pages)
+    page = Math.floor(Math.random()*400)
     console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
-      if pages == 0
-        pages = resp.pages
-      photos = photos.concat resp.phs
+      photos = photos.concat resp
       console.log 'New photos added, and photos.length = ' + photos.length
       $('#skip').prop('disabled', false)
       #
       if $('#photo').attr('src') == ''
         next_photo()
       else if $('#photo').is(':hidden')
-        $('#photo').show(1)
-      #console.log photos
+        $('#photo').show()
       
   $('#skip').prop('disabled', true)
   $('#photo').hide()
-  get_new_photos()
+  $.getJSON '/countries.json', (data) ->
+    countries = data["countries"]
+    get_new_photos()
   
   next_photo = ->
     $('#photo').hide()
@@ -40,7 +34,7 @@ $ ->
     console.log 'Removed one photo from the photos array, new length: ' + photos.length
     if photos.length < 5
       get_new_photos()
-    console.log "url: " + photo_url + "country: " + photo_country
+    console.log "url: " + photo_url + " country: " + photo_country
     if not photo_country
       next_photo()
     else

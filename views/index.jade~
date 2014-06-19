@@ -15,7 +15,7 @@ block content
               #circular_7.circular
               #circular_8.circular 
               .clearfix
-            img#photo.img-polaroid.center-block(src="http://farm4.staticflickr.com/3049/2560897976_48257593b7.jpg", alt="Guess the country...")
+            img#photo.img-polaroid.center-block(src="", alt="Guess the country...")
       .row
         .span12
           .row
