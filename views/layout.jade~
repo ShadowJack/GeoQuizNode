@@ -6,8 +6,8 @@ doctype html
 head
   meta(charset='utf-8')
   title Express CoffeeScript Template
-  meta(name='description', content='')
-  meta(name='author', content='')
+  meta(name='description', content='GeoQuiz based on Flickr public images')
+  meta(name='author', content='Konstantin Pavlovsky')
   // Mobile Specific
   meta(name="viewport", content="width=device-width, initial-scale=1.0")
 

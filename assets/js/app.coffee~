@@ -7,16 +7,21 @@ $ ->
       page += 1
       photos = photos.concat new_photos
       console.log 'New photos added, and photos.length = ' + photos.length
+      $('#skip').prop('disabled', false)
+      #
+      if $('#photo').attr('src') == ''
+        next_photo()
+      else if $('#photo').is(':hidden')
+        $('#photo').show(1)
       #console.log photos
-  
+      
+  $('#skip').prop('disabled', true)
+  $('#photo').hide()
   get_new_photos()
   
-  $('#next').click (event) ->
-    if photos.length == 0
-      get_new_photos()
-      #TODO: заменить на крутящееся колёсико, проверяющее состояние загрузки фото
-      while photos.length <= 0
-        1
+  next_photo = ->
+    $('#photo').hide()
+    $('#circular').show()
     i = Math.floor(Math.random()*photos.length)
     console.log 'i: ' + i
     #get the url_z of a random photo
@@ -28,7 +33,17 @@ $ ->
     if photos.length < 5
       get_new_photos()
     console.log "url: " + photo_url + "country: " + photo_country
-    $('#photo').attr('src', photo_url)
-    
+    $('#photo').attr('src', photo_url).on('load', ->
+      $('#circular').hide()
+      $('#photo').show()
+    )
+  
+  $('#skip').click (event) ->
+    if photos.length == 0
+      $('#skip').prop('disabled', true)
+      get_new_photos()
+      return false
+    next_photo()
+    return true
     
     
