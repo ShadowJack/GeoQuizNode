@@ -60,14 +60,15 @@ $ ->
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)
       $('.btn-choose').prop('disabled', enable)
-  
+
+  #-->-->-->-->-->-->-->-->-->-->-->--> 
   #The begining of the execution
   disable_buttons(true)
   $('#photo').hide()
   $.getJSON '/countries.json', (data) ->
     countries = data["countries"]
     get_new_photos()
-  
+  #TODO: загружать score
   
   $('.btn-choose').click (event) ->
     if this.innerHTML == curr_country

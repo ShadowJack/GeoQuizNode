@@ -61,20 +61,22 @@ $ ->
       $('#skip').prop('disabled', enable)
       $('.btn-choose').prop('disabled', enable)
 
-  #------------------------------  
+  #-->-->-->-->-->-->-->-->-->-->-->--> 
   #The begining of the execution
   disable_buttons(true)
   $('#photo').hide()
   $.getJSON '/countries.json', (data) ->
     countries = data["countries"]
     get_new_photos()
-  
+  #TODO: загружать score
   
   $('.btn-choose').click (event) ->
     if this.innerHTML == curr_country
       score += 30
+      $('#score').html score
     else
       score -= 10
+      $('#score').html score
     console.log 'score: ' + score
     next_photo()
   
@@ -84,6 +86,7 @@ $ ->
       get_new_photos()
       return false
     score -= 5
+    $('#score').html score
     console.log 'score: ' + score
     next_photo()
     return true

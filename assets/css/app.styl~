@@ -5,6 +5,7 @@
 .container
   margin-top: 60px
   width: 700px
+  position: relative
 
 h2
   smooth-button()
@@ -36,18 +37,20 @@ h3
 .full-width
   width: 100%
 
-.btn-fixwidth
+.btn-choose
   width: 250px
 
 button.btn.btn-fixwidth
   margin-left: -45px
 
-pre
-  font-family: courier
-  background-color: rgba(0,0,0,.8)
-  color: yellow
-  width: 100%
-  margin-bottom: 20px
-  padding: 10px
-  border: 1px solid black
+
+#score
+  absolute: top 444px left 280px
+  width: 120px
+  height: 30px
+  border: 1px solid #C8D5DE
+  font-size: 26px
+  text-align: center
+  padding-top: 8  px
+  
 
