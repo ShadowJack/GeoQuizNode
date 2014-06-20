@@ -2,6 +2,7 @@ $ ->
   photos = []
   countries = []
   score = 0
+  prev_country = ''
   curr_country = ''
   
   get_new_photos = ->
@@ -22,35 +23,38 @@ $ ->
     $('#circular').show()
     
     i = Math.floor(Math.random()*photos.length)
-    console.log 'i: ' + i
     #get the url_z of a random photo
     photo_url = photos[i].url
     curr_country = photos[i].country
     
     #remove new photo from the array of remaining photos
     photos.splice i, 1
-    console.log 'Removed one photo from the photos array, new length: ' + photos.length
+    console.log 'Removed one photo, new length: ' + photos.length
     if photos.length < 5
       get_new_photos()
-  
-    
+
     console.log "url: " + photo_url + " country: " + curr_country
-    if not curr_country
+    #skip this photo if it has no country information
+    # or the previous photo was from the same country 
+    if not curr_country or (prev_country and prev_country == curr_country)
       next_photo()
     else
-      #get next countries to display on buttons
-      next_countries = [curr_country]
-      while next_countries.length < 4
+      prev_country = curr_country
+      #get possible countries to display on buttons
+      possible_countries = [curr_country]
+      possible_countries_indexes = []
+      while possible_countries.length < 4
         country_index = Math.floor Math.random()*countries.length
-        if countries[country_index] != curr_country
-          next_countries.push countries[country_index]
+        if countries[country_index] != curr_country and $.inArray(country_index, possible_countries_indexes) == -1
+          possible_countries.push countries[country_index]
+          possible_countries_indexes.push country_index
           
       #set the buttons to display new data
       for i in [1..4]
         rand_button = $("#btn" + i)
-        c_index = Math.floor Math.random()*next_countries.length
-        rand_button.html next_countries[c_index]
-        next_countries.splice c_index, 1
+        c_index = Math.floor Math.random()*possible_countries.length
+        rand_button.html possible_countries[c_index]
+        possible_countries.splice c_index, 1
          
       #load new photo to the img element
       $('#photo').attr('src', photo_url).on 'load', ->

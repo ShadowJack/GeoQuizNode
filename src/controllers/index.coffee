@@ -9,7 +9,7 @@ exports.load_new_photos = (req, res) ->
   console.log 'Ready to fetch new photos...'
   #fetch the next photo in the array of recent photos from Flickr
   req_url = 'https://api.flickr.com/services/rest?\
-  format=json&method=flickr.photos.search&tags=nature,city,building,landscape\
+  format=json&method=flickr.photos.search&tags=city,building,landscape,house\
   &content_type=1&has_geo=1&per_page=10&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   console.log req_url
   #prepare the request to flickr.api  
@@ -63,7 +63,7 @@ exports.load_new_photos = (req, res) ->
 #   4. Вводим переменную со счётом(в будущем получаем с сервера vk.com) +
 #   5. Обрабатываем нажатие на одну из кнопок +
 
-#TODO: score_change - изменение счёта
+#TODO: пропуск фотографий, страны которых идут подряд
 
 #TODO: оптимизировать запрос так, чтобы страны вырьировались сильнее(м.б варьировать запросы)
 #TODO: test, refactor
