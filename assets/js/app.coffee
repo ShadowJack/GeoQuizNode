@@ -60,6 +60,10 @@ $ ->
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)
       $('.btn-choose').prop('disabled', enable)
+  
+  change_score = (val) ->
+    if score + val > 0 then score += val else score = 0
+    $('#score').html score
 
   #-->-->-->-->-->-->-->-->-->-->-->--> 
   #The begining of the execution
@@ -69,15 +73,13 @@ $ ->
     countries = data["countries"]
     get_new_photos()
   #TODO: загружать score
+  $('#score').html score
   
   $('.btn-choose').click (event) ->
     if this.innerHTML == curr_country
-      score += 30
-      $('#score').html score
+      change_score 20
     else
-      score -= 10
-      $('#score').html score
-    console.log 'score: ' + score
+      change_score -10
     next_photo()
   
   $('#skip').click (event) ->
@@ -85,9 +87,7 @@ $ ->
       $('#skip').prop('disabled', true)
       get_new_photos()
       return false
-    score -= 5
-    $('#score').html score
-    console.log 'score: ' + score
+    change_score -5
     next_photo()
     return true
     

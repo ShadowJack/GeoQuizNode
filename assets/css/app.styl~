@@ -1,5 +1,6 @@
 
 @import 'lib/bootstrap/bootstrap.styl' // bootstrap-stylus
+@import 'lib/buttons-min.css'
 @import 'nib'
 
 .container
@@ -40,12 +41,12 @@ h3
 .btn-choose
   width: 250px
 
-button.btn.btn-fixwidth
+button.pure-button.btn.btn-fixwidth
   margin-left: -45px
 
 
 #score
-  absolute: top 444px left 280px
+  absolute: top 444px left 278px
   width: 120px
   height: 30px
   border: 1px solid #C8D5DE

@@ -1,7 +1,7 @@
 extends layout
 block content
   .container
-    #score 10000
+    #score 
     .container-fluid
       .row.full-width
         .span12.full_width
