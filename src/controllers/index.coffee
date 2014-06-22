@@ -9,7 +9,7 @@ exports.load_new_photos = (req, res) ->
   console.log 'Ready to fetch new photos...'
   #fetch the next photo in the array of recent photos from Flickr
   req_url = 'https://api.flickr.com/services/rest?\
-  format=json&method=flickr.photos.search&tags=city,building,landscape,house\
+  format=json&method=flickr.photos.search&tags=landmark\
   &content_type=1&has_geo=1&per_page=10&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   console.log req_url
   #prepare the request to flickr.api  
@@ -54,16 +54,6 @@ exports.load_new_photos = (req, res) ->
         console.log e
       
     console.log "I've sent all geo requests and now waiting for responses"
-    
-#TODO: отображение вариантов выбора
-#   1. Список всех стран - на клиенте +
-#   2. Выбираем три произвольные, при этом проверяя,
-#   что в них не входит страна на фотографии +
-#   3. В произвольном порядке закрепляем за ними кнопки +
-#   4. Вводим переменную со счётом(в будущем получаем с сервера vk.com) +
-#   5. Обрабатываем нажатие на одну из кнопок +
-
-#TODO: пропуск фотографий, страны которых идут подряд
 
 #TODO: оптимизировать запрос так, чтобы страны вырьировались сильнее(м.б варьировать запросы)
 #TODO: test, refactor

@@ -1,7 +1,6 @@
 express = require 'express'
 stylus = require 'stylus'
 assets = require 'connect-assets'
-mongoose = require 'mongoose'
 session = require('express-session')
 cookieParser = require('cookie-parser')
 bodyParser = require("body-parser")
@@ -18,13 +17,6 @@ env = process.env.NODE_ENV or "development"
 config = require "./config"
 config.setEnvironment env
 
-# db_config = "mongodb://#{config.DB_USER}:#{config.DB_PASS}@#{config.DB_HOST}:#{config.DB_PORT}/#{config.DB_NAME}"
-# mongoose.connect db_config
-if env != 'production'
-  mongoose.connect 'mongodb://localhost/example'
-else
-  console.log('If you are running in production, you may want to modify the mongoose connect path')
-
 #### View initialization 
 # Add Connect Assets.
 app.use assets()
@@ -34,12 +26,6 @@ app.use express.static(process.cwd() + '/public')
 # Express Session
 console.log "setting session/cookie"
 app.use cookieParser()
-app.use session(
-  secret: "keyboard cat"
-  key: "sid"
-  cookie:
-    secure: true
-)
 
 # Set View Engine.
 app.set 'view engine', 'jade'

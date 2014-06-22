@@ -10,7 +10,7 @@ bodyParser = require("body-parser")
 app = express()
 
 # Define Port & Environment
-app.port = process.env.PORT or process.env.VMC_APP_PORT or 3000
+app.port = process.env.PORT or process.env.VMC_APP_PORT or 3333
 env = process.env.NODE_ENV or "development"
 
 # Config module exports has `setEnvironment` function that sets app settings depending on environment.
