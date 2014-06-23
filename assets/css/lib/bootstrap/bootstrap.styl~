@@ -17,7 +17,6 @@
 @import "reset";
 
 // Grid system and page structure
-@import "scaffolding";
 @import "grid";
 @import "layouts";
 
