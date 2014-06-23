@@ -23,12 +23,31 @@ describe 'General', ->
         )
 
   describe "Load photos", ->
-    it "should load exactly 10 photos", (done) ->
-      request(app).get '/load_new_photos?page=120', (err, response, body) ->
-        if err done err
-        else
-          console.log body
-          response.statusCode.should.be.equal 200
-          body.should.have.a.lengthOf 10
-          done()
-          
+    it "should load from 1 to 20 photos", (done) ->
+      page = Math.floor(Math.random*400)
+      request(app)
+        .get('/load_new_photos?page=' + page)
+        .expect( 200, (err, res)->
+          if err
+            done err
+          else
+            res.type.should.be.eql 'application/json'
+            res.body.length.should.be.within 1, 20
+            done()
+        )
+
+  describe "Load countries", ->
+    it "should load photos with valid countries", (done) ->
+      page = Math.floor(Math.random*400)
+      request(app)
+        .get('/load_new_photos?page=' + page)
+        .expect( 200, (err, res)->
+          if err
+            done err
+          else
+            res.type.should.be.eql 'application/json'
+            res.body.should.matchEach((val) ->
+              val.country.should.be.ok
+            )
+            done()
+        )  

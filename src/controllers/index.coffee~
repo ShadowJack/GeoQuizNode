@@ -10,7 +10,7 @@ exports.load_new_photos = (req, res) ->
   #fetch the next photo in the array of recent photos from Flickr
   req_url = 'https://api.flickr.com/services/rest?\
   format=json&method=flickr.photos.search&tags=landmark\
-  &content_type=1&has_geo=1&per_page=10&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
+  &content_type=1&has_geo=1&per_page=20&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   console.log req_url
   #prepare the request to flickr.api  
   request.get req_url, (err, resp, body) ->
@@ -51,7 +51,8 @@ exports.load_new_photos = (req, res) ->
             url: img_url,
             country: JSON.parse(data).countryName
           console.log geo_photo
-          result.push geo_photo
+          if geo_photo.country != undefined
+            result.push geo_photo
           
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           

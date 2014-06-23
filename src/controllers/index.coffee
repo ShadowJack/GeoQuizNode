@@ -25,6 +25,7 @@ exports.load_new_photos = (req, res) ->
     result = []
     console.log 'I have got the photos'
     place_ids = []
+    counter = 0
     for photo in photos
       place_id = photo.place_id
       console.log place_id
@@ -45,18 +46,20 @@ exports.load_new_photos = (req, res) ->
             return
             
           console.log 'I recieved response from geonames:'
+          counter += 1
           img_url = (rsp.client._httpMessage.path.match /uri\=.+/)[0].slice 4
           
           geo_photo =
             url: img_url,
             country: JSON.parse(data).countryName
           console.log geo_photo
-          result.push geo_photo
+          if geo_photo.country != undefined
+            result.push geo_photo
           
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           
           # if we have recieved the last place info - send result to the client
-          if result.length == place_ids.length
+          if counter == place_ids.length
             console.log "Last geo info recieved: " + result.length
             res.send result
       catch e
