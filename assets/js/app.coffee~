@@ -43,7 +43,7 @@ $ ->
       #skip this photo if it has no country information
       #(shouldn't get here cause this conditions is checked before returning from /load_new_photos)
       if not curr_country
-        console.log "Err: country property is 'undefined'"
+        console.log "Err: country property is 'undefined'!!!"
         next_photo()      
       
       console.log "url: " + photo_url + " country: " + curr_country

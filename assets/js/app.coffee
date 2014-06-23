@@ -7,10 +7,10 @@ $ ->
   
   get_new_photos = ->
     page = Math.floor(Math.random()*400)
-    console.log page
+    #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
       photos = photos.concat resp
-      console.log 'New photos added, and photos.length = ' + photos.length
+      #console.log 'New photos added, and photos.length = ' + photos.length
       disable_buttons(false)
       if $('#photo').attr('src') == ''
         next_photo()
@@ -36,7 +36,7 @@ $ ->
     else    
       #remove new photo from the array of remaining photos
       photos.splice i, 1
-      console.log 'Removed one photo, new length: ' + photos.length
+      #console.log 'Removed one photo, new length: ' + photos.length
       if photos.length < 5
         get_new_photos()
       
@@ -46,7 +46,7 @@ $ ->
         console.log "Err: country property is 'undefined'!!!"
         next_photo()      
       
-      console.log "url: " + photo_url + " country: " + curr_country
+      #console.log "url: " + photo_url + " country: " + curr_country
       prev_country = curr_country
       #get possible countries to display on buttons
       possible_countries = [curr_country]
