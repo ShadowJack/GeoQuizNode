@@ -22,7 +22,7 @@ describe 'General', ->
                 done
         )
 
-  describe "Load 10 photos", ->
+  describe "Load photos", ->
     it "should load exactly 10 photos", (done) ->
       request(app).get '/load_new_photos?page=120', (err, response, body) ->
         if err done err
@@ -31,3 +31,4 @@ describe 'General', ->
           response.statusCode.should.be.equal 200
           body.should.have.a.lengthOf 10
           done()
+          
