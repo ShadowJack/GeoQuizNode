@@ -1,6 +1,6 @@
 {
 	"name": "geo_quiz_node", 
-	"version": "0.1",
+	"version": "0.0.0",
 	"private": true,
 	"author": "Konstantin Pavlovsky <kostyap@hotmail.ru> (http://github.com/ShadowJack)",
 	"repository": {
@@ -21,7 +21,6 @@
 		"nib": "0.9.x",
 		"markdown": "0.4.0",
 		"which": "1.0.5",
-		"mongoose": "3.8.x",
 		"express-session": "1.0.x",
 		"cookie-parser": "1.0.x",
 		"body-parser": "1.0.x",
