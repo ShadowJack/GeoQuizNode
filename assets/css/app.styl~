@@ -41,7 +41,7 @@ h3
 .btn-choose
   width: 250px
 
-button.pure-button.btn.btn-fixwidth
+button.pure-button.btn-fixwidth
   margin-left: -45px
 
 

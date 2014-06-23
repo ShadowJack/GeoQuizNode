@@ -5,7 +5,7 @@ doctype html
 // [if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]
 head
   meta(charset='utf-8')
-  title Express CoffeeScript Template
+  title GeoQuiz
   meta(name='description', content='GeoQuiz based on Flickr public images')
   meta(name='author', content='Konstantin Pavlovsky')
   // Mobile Specific
@@ -14,6 +14,7 @@ head
   // CSS
   != css('app')
   != css('preloader')
+  != css('http://yui.yahooapis.com/pure/0.5.0/buttons-min.css')
   
 body
   block content
