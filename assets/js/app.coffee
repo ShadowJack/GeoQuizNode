@@ -75,7 +75,10 @@ $ ->
   
   change_score = (val) ->
     if score + val > 0 then score += val else score = 0
-    $('#score').html score
+    $('#score').fadeOut 100, ->
+      $('#score').html score
+      $('#score').fadeIn 100
+
 
   #-->-->-->-->-->-->-->-->-->-->-->--> 
   #The begining of the execution
