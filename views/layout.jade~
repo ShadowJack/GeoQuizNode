@@ -16,7 +16,6 @@ head
   != css('app')
   != css('preloader')
 
-  
 body
   block content
 

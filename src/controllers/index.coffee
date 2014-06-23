@@ -67,5 +67,5 @@ exports.load_new_photos = (req, res) ->
       
     console.log "I've sent all geo requests and now waiting for responses"
 
-#TODO: test, refactor
+#TODO: integrate vk
 
