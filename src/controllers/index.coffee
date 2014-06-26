@@ -17,10 +17,6 @@ exports.load_new_photos = (req, res) ->
     if err
       console.log 'Error: ' + err
       return
-    #console.log body
-#    if (body.stat != "ok")
-#      console.log body.stat
-#      return
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
     result = []
     console.log 'I have got the photos'
