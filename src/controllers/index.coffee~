@@ -64,4 +64,7 @@ exports.load_new_photos = (req, res) ->
     #console.log "I've sent all geo requests and now waiting for responses"
 
 #TODO: integrate vk
+#TODO: подсветка правильного ответа при нажатии на любую клавишу
+
+
 

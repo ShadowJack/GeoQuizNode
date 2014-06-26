@@ -6,11 +6,11 @@ $ ->
   curr_country = ''
   
   get_new_photos = ->
-    page = Math.floor(Math.random()*400)
+    page = Math.floor(Math.random()*200)
     #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
       photos = photos.concat resp
-      #console.log 'New photos added, and photos.length = ' + photos.length
+      console.log 'New photos added, and photos.length = ' + photos.length
       disable_buttons(false)
       if $('#photo').attr('src') == ''
         next_photo()
@@ -116,14 +116,14 @@ $ ->
   , 
   '5.21'
   
-  $('.btn-choose').click (event) ->
+  $('.btn-choose').on 'click', (event) ->
     if this.innerHTML == curr_country
       change_score 20
     else
       change_score -10
     next_photo()
   
-  $('#skip').click (event) ->
+  $('#skip').on 'click', (event) ->
     if photos.length == 0
       $('#skip').prop('disabled', true)
       get_new_photos()
