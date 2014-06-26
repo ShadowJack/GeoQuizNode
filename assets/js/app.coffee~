@@ -75,6 +75,12 @@ $ ->
   
   change_score = (val) ->
     if score + val > 0 then score += val else score = 0
+    try
+      VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
+        if resp.error or resp.response != 1
+          console.log 'Error: Unable to update score! err: ' + resp.error
+    catch e 
+      console.log e
     $('#score').fadeOut 100, ->
       $('#score').html score
       $('#score').fadeIn 100
@@ -87,8 +93,27 @@ $ ->
   $.getJSON '/countries.json', (data) ->
     countries = data["countries"]
     get_new_photos()
-  #TODO: загружать score
-  $('#score').html score
+  
+  VK.init (data) -> 
+    VK.api 'storage.get', {key: 'score'}, (data) ->
+      if data.response
+        if data.response == ''
+          #the first time in the app
+          score = 0
+          VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
+            if resp.error or resp.response != 1
+              console.log 'Error: Unable to update score!'
+        else
+          score = parseInt data.response
+        
+        #set the score
+        $('#score').html score
+      else
+        console.log 'Error: ' + data.error
+  ,->
+    window.top.location=window.top.location
+  , 
+  '5.21'
   
   $('.btn-choose').click (event) ->
     if this.innerHTML == curr_country
