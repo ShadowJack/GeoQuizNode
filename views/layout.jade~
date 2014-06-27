@@ -22,6 +22,7 @@ body
   != js('//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js')
   != js('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js')
   != js('//vk.com/js/api/xd_connection.js?2')
+  != js('jquery.color-2.1.2.min.js')
   != js('app')
 
 | </html>
