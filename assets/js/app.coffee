@@ -11,7 +11,7 @@ $ ->
     #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
       if resp.length == 0
-        if reqs_count < 5
+        if reqs_count < 3
           reqs_count += 1
           get_new_photos()
         else
