@@ -7,7 +7,7 @@ $ ->
   
   get_new_photos = ->
     page = Math.floor(Math.random()*200)
-    console.log page
+    #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
       photos = photos.concat resp
       console.log 'New photos added, and photos.length = ' + photos.length
@@ -36,7 +36,7 @@ $ ->
     else    
       #remove new photo from the array of remaining photos
       photos.splice i, 1
-      console.log 'Removed one photo, new length: ' + photos.length
+      #console.log 'Removed one photo, new length: ' + photos.length
       if photos.length < 5
         get_new_photos()
       

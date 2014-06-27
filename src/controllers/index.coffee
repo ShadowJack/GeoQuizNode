@@ -18,6 +18,11 @@ exports.load_new_photos = (req, res) ->
       console.log 'Error: ' + err
       return
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
+    
+    if photos == []
+      console.log 'No photos were recieved from Flickr'
+      res.send photos
+      
     result = []
     console.log photos
     place_ids = []
