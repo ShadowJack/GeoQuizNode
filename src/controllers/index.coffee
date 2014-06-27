@@ -19,7 +19,7 @@ exports.load_new_photos = (req, res) ->
       return
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
     result = []
-    console.log 'I have got the photos'
+    console.log photos
     place_ids = []
     counter = 0
     for photo in photos
@@ -34,7 +34,7 @@ exports.load_new_photos = (req, res) ->
       #get the country by lat, lon
       req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
       uri=' + photo.url_z
-      
+      console.log req_uri
       try
         request.get req_uri, (error, rsp, data) ->
           if error
