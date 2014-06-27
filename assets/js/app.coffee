@@ -31,9 +31,9 @@ $ ->
     
     #show the right answere
     if curr_country
+      console.log 'change color'
       right_button = $('.btn-choose:contains("' + curr_country + '")')
-      right_button.css 'outline-style', 'solid'
-      right_button.css 'outline-color', '#639c79'      
+      right_button.css 'background-color', '#639c79'
     
     $('#photo').hide()
     $('#circular').show()
@@ -73,10 +73,8 @@ $ ->
           possible_countries.push countries[country_index]
           possible_countries_indexes.push country_index
   
-      
       if right_button
-        right_button.css 'outline-style', 'none'
-        right_button.css 'outline-color', 'inherit'
+        right_button.css 'background-color', '#E6E6E6'
   
       #set the buttons to display new data
       for i in [1..4]
@@ -90,6 +88,7 @@ $ ->
       $('#photo').attr('src', photo_url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
+
 
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)
