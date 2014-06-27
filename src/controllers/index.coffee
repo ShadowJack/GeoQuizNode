@@ -19,12 +19,12 @@ exports.load_new_photos = (req, res) ->
       return
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
     
-    if photos == []
+    if photos.length == 0
       console.log 'No photos were recieved from Flickr'
-      res.send photos
+      res.send []
+      return
       
     result = []
-    console.log photos
     place_ids = []
     counter = 0
     for photo in photos
@@ -68,7 +68,6 @@ exports.load_new_photos = (req, res) ->
       
     console.log "I've sent all geo requests and now waiting for responses"
 
-#TODO: integrate vk
 #TODO: подсветка правильного ответа при нажатии на любую клавишу
 
 

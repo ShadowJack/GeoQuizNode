@@ -14,7 +14,7 @@ head
   // CSS
   != css('https://cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/buttons-min.css')
   != css('app')
-  //!= css('preloader')
+  != css('preloader')
 
 body
   block content

@@ -4,21 +4,37 @@ $ ->
   score = 0
   prev_country = ''
   curr_country = ''
+  reqs_count = 0
   
   get_new_photos = ->
     page = Math.floor(Math.random()*200)
     #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
-      photos = photos.concat resp
-      console.log 'New photos added, and photos.length = ' + photos.length
-      disable_buttons(false)
-      if $('#photo').attr('src') == ''
-        next_photo()
-      else if $('#photo').is(':hidden')
-        $('#photo').show()
+      if resp.length == 0
+        if reqs_count < 5
+          reqs_count += 1
+          get_new_photos()
+        else
+          console.log 'Unable to retrieve new photos, sorry...'
+      else
+        reqs_count = 0
+        photos = photos.concat resp
+        console.log 'New photos added, and photos.length = ' + photos.length
+        disable_buttons(false)
+        if $('#photo').attr('src') == ''
+          next_photo()
+        else if $('#photo').is(':hidden')
+          $('#photo').show()
       
   
   next_photo = ->
+    
+    #show the right answere
+    if curr_country
+      right_button = $('.btn-choose:contains("' + curr_country + '")')
+      right_button.css 'outline-style', 'solid'
+      right_button.css 'outline-color', '#639c79'      
+    
     $('#photo').hide()
     $('#circular').show()
     
@@ -56,14 +72,20 @@ $ ->
         if countries[country_index] != curr_country and $.inArray(country_index, possible_countries_indexes) == -1
           possible_countries.push countries[country_index]
           possible_countries_indexes.push country_index
-          
+  
+      
+      if right_button
+        right_button.css 'outline-style', 'none'
+        right_button.css 'outline-color', 'inherit'
+  
       #set the buttons to display new data
       for i in [1..4]
         rand_button = $("#btn" + i)
         c_index = Math.floor Math.random()*possible_countries.length
         rand_button.html possible_countries[c_index]
         possible_countries.splice c_index, 1
-         
+    
+           
       #load new photo to the img element
       $('#photo').attr('src', photo_url).on 'load', ->
         $('#circular').hide()
