@@ -89,7 +89,7 @@ $ ->
       $('#photo').attr('src', photo_url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
-
+ 
 
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)

@@ -1,7 +1,7 @@
 extends layout
 block content
-  .container
-    #score 
+  #score
+  .container 
     .container-fluid
       .row.full-width
         .span12.full_width
@@ -21,18 +21,18 @@ block content
         .span12
           .row
             .span6
-              button#btn1.btn.btn-fixwidth.btn-choose.center-block(href="") *
+              button#btn1.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
             .span6
-              button#btn2.btn.btn-fixwidth.btn-choose.center-block(href="") *
+              button#btn2.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
           .row
             .span6
-              button#btn3.btn.btn-fixwidth.btn-choose.center-block(href="") *
+              button#btn3.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
             .span6
-              button#btn4.btn.btn-fixwidth.btn-choose.center-block(href="") *
+              button#btn4.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
       .row
         .span12
           .skip-container
-            button#skip.btn.btn-default.center-block(href="") Пропустить
+            button#skip.pure-button.btn-default.center-block(href="") Пропустить
  
  
  

@@ -89,7 +89,12 @@ $ ->
       $('#photo').attr('src', photo_url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
-
+ 
+        #top = (400 - $('#photo').height())/2
+        #console.log top
+        #$('#photo').css('margin-top', top)
+        #$('#score').css('top', 444 + top)
+ 
 
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)
@@ -106,8 +111,8 @@ $ ->
             console.log 'Error: Unable to update score! err: ' + resp.error
       catch e 
         console.log e
-      finally
-        change_score_count += 1
+    
+    change_score_count += 1
       
     $('#score').fadeOut 100, ->
       $('#score').html score
