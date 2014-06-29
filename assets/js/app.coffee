@@ -5,6 +5,7 @@ $ ->
   prev_country = ''
   curr_country = ''
   reqs_count = 0
+  change_score_count = 0
   
   get_new_photos = ->
     page = Math.floor(Math.random()*200)
@@ -96,13 +97,18 @@ $ ->
   
   change_score = (val) ->
     if score + val > 0 then score += val else score = 0
-    try
-      VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
-        if resp.error or resp.response != 1
-          console.log 'Error: Unable to update score! err: ' + resp.error
-    catch e 
-      console.log e
-
+    if change_score_count % 3 == 0
+      
+      try
+        console.log 'send req to vk'
+        VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
+          if resp.error or resp.response != 1
+            console.log 'Error: Unable to update score! err: ' + resp.error
+      catch e 
+        console.log e
+    
+    change_score_count += 1
+      
     $('#score').fadeOut 100, ->
       $('#score').html score
       $('#score').fadeIn 100
