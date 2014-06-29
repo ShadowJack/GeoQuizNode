@@ -100,7 +100,6 @@ $ ->
     if change_score_count % 3 == 0
       
       try
-        console.log 'send req to vk'
         VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
           if resp.error or resp.response != 1
             console.log 'Error: Unable to update score! err: ' + resp.error
@@ -137,7 +136,7 @@ $ ->
         #set the score
         $('#score').html score
       else
-        console.log 'Error: ' + data.error
+        console.log 'Error: ' + JSON.stringify(data.error)
   ,->
     window.top.location=window.top.location
   , 
