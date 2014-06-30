@@ -137,6 +137,7 @@ $ ->
         $('#score').html score
       else
         console.log 'Error: ' + JSON.stringify(data.error)
+        window.top.location=window.top.location
   ,->
     window.top.location=window.top.location
   , 

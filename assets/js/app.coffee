@@ -139,6 +139,7 @@ $ ->
         console.log 'Error: ' + JSON.stringify(data.error)
         window.top.location=window.top.location
   ,->
+    #reload page
     window.top.location=window.top.location
   , 
   '5.21'
