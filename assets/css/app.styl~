@@ -28,9 +28,11 @@ h3
 #photo
   max-height: 400px
   display: inline-block
+  position: relative
   
 .skip-container
-  width: 640px  
+  float: left
+  width: 100px  
   
 .center-block
   margin-left: auto
@@ -45,6 +47,37 @@ h3
 
 button.pure-button.btn-fixwidth
   margin-left: -45px
+
+#thumbs_down
+  float: right
+  top: 7px
+  
+#thumbs_up
+  float: left
+  top: 2px
+  
+#thumbs_down ,#thumbs_up
+  position: relative
+  cursor: pointer
+  border: none
+  width: 20px
+  height: 20px
+
+#thumbs_down
+  background:url(/img/thumbs_down20.png) no-repeat
+
+#thumbs_down:active
+  background:url(/img/thumbs_down_active20.png) no-repeat
+
+#thumbs_up
+  background:url(/img/thumbs_up20.png) no-repeat
+
+#thumbs_up:active
+  background:url(/img/thumbs_up_active20.png) no-repeat
+
+.thumbs_down_container, .thumbs_up_container
+  width: 240px
+  height: 30px
 
 
 #score
