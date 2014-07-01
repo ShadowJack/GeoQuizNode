@@ -78,8 +78,6 @@ exports.load_new_photos = (req, res) ->
                 query = client.query "INSERT INTO photos (url_z, country) VALUES ('" + r.url + "', '" + r.country + "');", (err, result)->
                   if err
                     console.log "Postgres db error: " + JSON.stringify err
-                  else
-                    console.log result
               done()
 
       catch e
@@ -87,9 +85,9 @@ exports.load_new_photos = (req, res) ->
       
     console.log "I've sent all geo requests and now waiting for responses"
 
-#TODO: подсветка правильного ответа при нажатии на любую клавишу - КААААААК???
+#TODO: показ правильного ответа при нажатии на любую клавишу - КААААААК???
 #TODO: убрать правый отступ во вконтакте - КААААААК???
-#TODO: подключить бд для хранения всех фотографий
+#TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
 
 
 

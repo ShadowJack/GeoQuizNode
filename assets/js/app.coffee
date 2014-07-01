@@ -30,12 +30,6 @@ $ ->
   
   next_photo = ->
     
-    #show the right answere
-    if curr_country
-      console.log 'change color'
-      right_button = $('.btn-choose:contains("' + curr_country + '")')
-      right_button.css 'background-color', '#639c79'
-    
     $('#photo').hide()
     $('#circular').show()
     
@@ -74,9 +68,6 @@ $ ->
           possible_countries.push countries[country_index]
           possible_countries_indexes.push country_index
   
-      if right_button
-        right_button.css 'background-color', '#E6E6E6'
-  
       #set the buttons to display new data
       for i in [1..4]
         rand_button = $("#btn" + i)
@@ -90,6 +81,17 @@ $ ->
         $('#circular').hide()
         $('#photo').show()
  
+  show_right_answere = ->
+    #show the right answere
+    if curr_country
+      $('.btn-choose:contains("' + curr_country + '")').css 'background-color', '#639c79'
+      window.setTimeout ->
+        $('.btn-choose:contains("' + curr_country + '")').css 'background-color', '#E6E6E6'
+        next_photo()
+      , 1000
+    else
+      next_photo()
+
 
   disable_buttons = (enable) ->
       $('#skip').prop('disabled', enable)
@@ -147,17 +149,19 @@ $ ->
   $('.btn-choose').on 'click', (event) ->
     if this.innerHTML == curr_country
       change_score 20
+      next_photo()
     else
       change_score -10
-    next_photo()
+      show_right_answere()
   
+      
   $('#skip').on 'click', (event) ->
     if photos.length == 0
       $('#skip').prop('disabled', true)
       get_new_photos()
       return false
     change_score -5
-    next_photo()
+    show_right_answere()
     return true
     
     
