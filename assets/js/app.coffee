@@ -80,6 +80,9 @@ $ ->
       $('#photo').attr('src', photo_url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
+        #center the image
+        top = (400 - $('#photo').height())/2
+        $('#photo').css 'top', top
  
   show_right_answere = ->
     #show the right answere
