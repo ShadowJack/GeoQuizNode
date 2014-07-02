@@ -40,9 +40,12 @@ exports.load_new_photos = (req, res) ->
         continue
       else
         place_ids.push place_id
+      res_url = 'https://www.flickr.com/photos/' + photo.owner + '/' + photo.id
+      #console.log "res_url in the request: " + res_url
       #get the country by lat, lon
       req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
-      uri=' + photo.url_z
+      uri=' + photo.url_z + '&res_url=' + res_url
+      
       #console.log req_uri
       try
         request.get req_uri, (error, rsp, data) ->
@@ -52,11 +55,14 @@ exports.load_new_photos = (req, res) ->
             
           #console.log 'I recieved response from geonames:'
           counter += 1
-          img_url = (rsp.client._httpMessage.path.match /uri\=.+/)[0].slice 4
-          
+          img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
+          #console.log img_url
+          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8
+          #console.log res_url
           geo_photo =
             url: img_url,
             country: JSON.parse(data).countryName
+            res_url: res_url
           console.log geo_photo
           if geo_photo.country != undefined
             result.push geo_photo
@@ -88,8 +94,7 @@ exports.thumbs = (req, res) ->
         res.send {error: err}
         return done()
         
-      console.log result.rowCount
-      console.log req.body.up
+      console.log req.body
       
       #this photo is not in the db
       if result.rowCount == 0 && req.body.up
@@ -118,10 +123,9 @@ exports.thumbs = (req, res) ->
       else    # photo not in db and we are trying to decrease score - do nothing
         res.send {}
 
-#TODO: кнопки оценки фотографии - фиксировать положение - нажатия
+#TODO: при щелчке на фотографии переходить на оригинал на фликере
 #TODO: добавить таймаут, в котором проверять, если не все данные о фотографиях загрузились, то повторить загрузку
-#TODO: убрать правый отступ во вконтакте - КААААААК???
 #TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
-#TODO: при щелчке на фотографию переходить на оригинал на фликере
 
+#TODO: убрать правый отступ во вконтакте - КААААААК???
 

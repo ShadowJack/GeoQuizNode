@@ -16,7 +16,8 @@ block content
               #circular_7.circular
               #circular_8.circular 
               .clearfix
-            img#photo.img-polaroid.center-block(src="", alt="Guess the country...")
+            a
+              img#photo.img-polaroid.center-block(src="", alt="Guess the country...")
       .row
         .span12
           .row
@@ -31,11 +32,11 @@ block content
               button#btn4.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
       .row
         .span3.thumbs_down_container
-          a#thumbs_down()
+          a#thumbs_down
         .span2.skip-container
           button#skip.pure-button.btn-default.center-block(href="") Пропустить
         .span3.thumbs_up_container
-          a#thumbs_up()
+          a#thumbs_up
  
  
  

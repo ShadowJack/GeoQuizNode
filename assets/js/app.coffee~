@@ -36,8 +36,7 @@ $ ->
     
     i = Math.floor(Math.random()*photos.length)
     #get the url_z of a random photo
-    curr_photo.url = photos[i].url
-    curr_photo.country = photos[i].country
+    curr_photo = photos[i]
     
     #if we picked the photo with te same country as previous - try again
     #only if we have all photos with the same country then we have no options
@@ -81,6 +80,7 @@ $ ->
       $('#photo').attr('src', curr_photo.url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
+        $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
         top = (400 - $('#photo').height())/2
         $('#photo').css 'top', top
@@ -201,6 +201,7 @@ $ ->
       if active_thumb == 1
         $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
       active_thumb = -1
+    return false
     
     
     
