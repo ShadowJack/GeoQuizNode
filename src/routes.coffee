@@ -14,6 +14,9 @@ module.exports = (app) ->
     
   app.get '/load_new_photos', (req, res, next) ->
     routeMvc('index', 'load_new_photos', req, res, next)
+    
+  app.post '/thumbs', (req, res, next) ->
+    routeMvc('index', 'thumbs', req, res, next)
 
   #   - _/**:controller**_  -> controllers/***:controller***/index method
   app.all '/:controller', (req, res, next) ->

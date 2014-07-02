@@ -3,7 +3,7 @@ $ ->
   countries = []
   score = 0
   prev_country = ''
-  curr_country = ''
+  curr_photo = {}
   reqs_count = 0
   change_score_count = 0
   
@@ -35,14 +35,14 @@ $ ->
     
     i = Math.floor(Math.random()*photos.length)
     #get the url_z of a random photo
-    photo_url = photos[i].url
-    curr_country = photos[i].country
+    curr_photo.url = photos[i].url
+    curr_photo.country = photos[i].country
     
     #if we picked the photo with te same country as previous - try again
     #only if we have all photos with the same country then we have no options
     
     #TODO: отлавливать случаи, когда все оставшиеся фотографии с одной страны
-    if (prev_country and prev_country == curr_country)
+    if (prev_country and prev_country == curr_photo.country)
       next_photo()
     else    
       #remove new photo from the array of remaining photos
@@ -53,18 +53,18 @@ $ ->
       
       #skip this photo if it has no country information
       #(shouldn't get here cause this conditions is checked before returning from /load_new_photos)
-      if not curr_country
+      if not curr_photo.country
         console.log "Err: country property is 'undefined'!!!"
         next_photo()      
       
-      #console.log "url: " + photo_url + " country: " + curr_country
-      prev_country = curr_country
+      #console.log "url: " + photo_url + " country: " + curr_photo.country
+      prev_country = curr_photo.country
       #get possible countries to display on buttons
-      possible_countries = [curr_country]
+      possible_countries = [curr_photo.country]
       possible_countries_indexes = []
       while possible_countries.length < 4
         country_index = Math.floor Math.random()*countries.length
-        if countries[country_index] != curr_country and $.inArray(country_index, possible_countries_indexes) == -1
+        if countries[country_index] != curr_photo.country and $.inArray(country_index, possible_countries_indexes) == -1
           possible_countries.push countries[country_index]
           possible_countries_indexes.push country_index
   
@@ -77,7 +77,7 @@ $ ->
     
            
       #load new photo to the img element
-      $('#photo').attr('src', photo_url).on 'load', ->
+      $('#photo').attr('src', curr_photo.url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
         #center the image
@@ -86,10 +86,10 @@ $ ->
  
   show_right_answere = ->
     #show the right answere
-    if curr_country
-      $('.btn-choose:contains("' + curr_country + '")').css 'background-color', '#639c79'
+    if curr_photo.country
+      $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#639c79'
       window.setTimeout ->
-        $('.btn-choose:contains("' + curr_country + '")').css 'background-color', '#E6E6E6'
+        $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#E6E6E6'
         next_photo()
       , 1000
     else
@@ -150,7 +150,7 @@ $ ->
   '5.21'
   
   $('.btn-choose').on 'click', (event) ->
-    if this.innerHTML == curr_country
+    if this.innerHTML == curr_photo.country
       change_score 20
       next_photo()
     else
@@ -166,5 +166,17 @@ $ ->
     change_score -5
     show_right_answere()
     return true
+    
+  $('#thumbs_up, #thumbs_down'). on 'click', (event) ->
+    up = ($(this).attr('id') == 'thumbs_up')
+    $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
+      if status != 'ok' and status != '200'
+        console.log status
+        return
+      if data.error
+        console.log "Error while changing photo score: " + JSON.parse data.error
+        return  
+    , 'json'
+    
     
     

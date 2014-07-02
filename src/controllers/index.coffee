@@ -67,28 +67,61 @@ exports.load_new_photos = (req, res) ->
           if counter == place_ids.length
             console.log "Last geo info recieved: " + result.length
             res.send result
-            
-            #save new photos to bd:
-            pg.connect DATABASE_URL, (err, client, done) ->
-              if err
-                console.log err
-                return
-
-              for r in result
-                query = client.query "INSERT INTO photos (url_z, country) VALUES ('" + r.url + "', '" + r.country + "');", (err, result)->
-                  if err
-                    console.log "Postgres db error: " + JSON.stringify err
-              done()
 
       catch e
         console.log e
       
     console.log "I've sent all geo requests and now waiting for responses"
 
+
+exports.thumbs = (req, res) ->
+  # try to get this photo from db
+  pg.connect DATABASE_URL, (err, client, done) ->
+    if err
+      console.log err
+      res.send {error: err}
+      return done()
+    
+    query = client.query "SELECT * FROM photos WHERE url_z = '" + req.body.photo.url + "';", (err, result) ->
+      if err
+        console.log err
+        res.send {error: err}
+        return done()
+        
+      console.log result.rowCount
+      console.log req.body.up
+      
+      #this photo is not in the db
+      if result.rowCount == 0 && req.body.up
+        console.log "Try to add new photo to db"
+        client.query "INSERT INTO photos (url_z, country, score) VALUES ('" + req.body.photo.url + "', '" + req.body.photo.country + "', '1');", (err, result)->
+          if err
+            console.log "Postgres db error: " + JSON.stringify err
+          res.send result
+        done()
+      # this photo is in db  
+      else if result.rowCount > 0 
+        if (req.body.up == 'true')
+          console.log "Try to increase the score of the photo"
+          client.query "UPDATE photos SET score = score + 1 WHERE url_z = '" + req.body.photo.url + "';", (err, result)->
+            if err
+              console.log "Postgres db error: " + JSON.stringify err
+            res.send result
+          done()
+        else
+          console.log "Try to decrease the score of the photo"
+          client.query "UPDATE photos SET score = score - 1 WHERE url_z = '" + req.body.photo.url + "';", (err, result)->
+            if err
+              console.log "Postgres db error: " + JSON.stringify err
+            res.send result
+          done()
+      else    # photo not in db and we are trying to decrease score - do nothing
+        res.send {}
+
 #TODO: кнопки оценки фотографии
 #TODO: добавить таймаут, в котором проверять, если не все данные о фотографиях загрузились, то повторить загрузку
 #TODO: убрать правый отступ во вконтакте - КААААААК???
 #TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
-
+#TODO: при щелчке на фотографию переходить на оригинал на фликере
 
 
