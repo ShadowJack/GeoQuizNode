@@ -6,6 +6,7 @@ $ ->
   curr_photo = {}
   reqs_count = 0
   change_score_count = 0
+  active_thumb = 0
   
   get_new_photos = ->
     page = Math.floor(Math.random()*200)
@@ -168,8 +169,10 @@ $ ->
     return true
     
   $('#thumbs_up, #thumbs_down'). on 'click', (event) ->
+    event.preventDefault()
     up = ($(this).attr('id') == 'thumbs_up')
-    console.log up
+    if (up && active_thumb == 1) or (!up && active_thumb == -1)
+      return false
     $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
       if status != 'ok' and status != '200'
         console.log status
@@ -178,6 +181,18 @@ $ ->
         console.log "Error while changing photo score: " + JSON.parse data.error
         return  
     , 'json'
+    if up
+      
+      $(this).prop 'disabled', true
+      $(this).css 'background', "url(/img/thumbs_up_active20.png)"
+      $('#thumbs_down').prop 'disabled', false
+      $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
+      
+    else
+      $(this).prop 'disabled', true
+      $(this).css 'background', "url(/img/thumbs_down_active20.png)"
+      $('#thumbs_up').prop 'disabled', false
+      $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
     
     
     

@@ -101,7 +101,7 @@ exports.thumbs = (req, res) ->
         done()
       # this photo is in db  
       else if result.rowCount > 0 
-        if (req.body.up == true)
+        if (req.body.up == 'true')
           console.log "Try to increase the score of the photo"
           client.query "UPDATE photos SET score = score + 1 WHERE url_z = '" + req.body.photo.url + "';", (err, result)->
             if err
