@@ -9,7 +9,7 @@ $ ->
   active_thumb = 0
   
   get_new_photos = ->
-    page = Math.floor(Math.random()*200)
+    page = Math.floor(Math.random()*266)
     #console.log page
     $.get '/load_new_photos?page='+page, (resp) ->
       if resp.length == 0

@@ -13,7 +13,7 @@ exports.load_new_photos = (req, res) ->
   #fetch the next photo in the array of recent photos from Flickr
   req_url = 'https://api.flickr.com/services/rest?\
   format=json&method=flickr.photos.search&tags=landmark\
-  &sort=relevance&content_type=1&has_geo=1&per_page=20&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
+  &sort=relevance&content_type=1&has_geo=1&per_page=15&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   console.log req_url
   
   #prepare the request to flickr.api  
@@ -27,8 +27,34 @@ exports.load_new_photos = (req, res) ->
       console.log 'No photos were recieved from Flickr'
       res.send []
       return
-      
+    
     result = []
+    get_from_db = false
+    get_from_flickr = false
+    #TODO: после загрузки из базы проверять, не загружены ли уже фотографии из фликера и наоборот
+    pg.connect DATABASE_URL, (err, client, done) ->
+      if err
+        console.log err
+        return done()
+      
+      query = client.query "SELECT * FROM photos ORDER BY random() LIMIT 5;", (err, reslt) ->
+        if err
+          console.log err
+          get_from_db = true
+          return done()
+        #console.log result
+        for r in reslt.rows
+          c_ph = 
+            url: r.url_z,
+            country: r.country,
+            res_url: r.res_url
+          
+          result.push (c_ph)
+        get_from_db = true
+        if get_from_flickr == true
+          res.send result
+    
+    
     place_ids = []
     counter = 0
     start_time = new Date().getTime()
@@ -73,11 +99,13 @@ exports.load_new_photos = (req, res) ->
           # if we have recieved the last place info - send result to the client
           if (new Date(). getTime() - start_time) > 5000
             console.log 'waiting for too long... i will try again'
-            res.send result
+            get_from_flickr = true
             
           else if counter == place_ids.length
             console.log "Last geo info recieved: " + result.length
-            res.send result
+            get_from_flickr = true
+            if get_from_db == true
+              res.send result
           
           
       catch e
@@ -105,7 +133,9 @@ exports.thumbs = (req, res) ->
       #this photo is not in the db
       if result.rowCount == 0 && req.body.up
         console.log "Try to add new photo to db"
-        client.query "INSERT INTO photos (url_z, country, score) VALUES ('" + req.body.photo.url + "', '" + req.body.photo.country + "', '1');", (err, result)->
+        q = "INSERT INTO photos (url_z, country, score, res_url) VALUES ('" + req.body.photo.url + "', '" + req.body.photo.country + "', '1', '" + req.body.photo.res_url + "');"
+        console.log q
+        client.query q, (err, result)->
           if err
             console.log "Postgres db error: " + JSON.stringify err
           res.send result
@@ -129,7 +159,6 @@ exports.thumbs = (req, res) ->
       else    # photo not in db and we are trying to decrease score - do nothing
         res.send {}
 
-#TODO: добавить таймаут, в котором проверять, если не все данные о фотографиях загрузились, то повторить загрузку
 #TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
 
 #TODO: убрать правый отступ во вконтакте - КААААААК???
