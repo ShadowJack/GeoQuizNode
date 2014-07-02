@@ -201,6 +201,7 @@ $ ->
       if active_thumb == 1
         $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
       active_thumb = -1
+    return false
     
     
     

@@ -191,14 +191,16 @@ $ ->
         return  
     , 'json'
     if up
-      active_thumb = 1
       $(this).css 'background', "url(/img/thumbs_up_active20.png)"
-      $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
+      if active_thumb == -1
+        $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
+      active_thumb = 1
       
     else
-      active_thumb = -1
       $(this).css 'background', "url(/img/thumbs_down_active20.png)"
-      $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
+      if active_thumb == 1
+        $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
+      active_thumb = -1
     
     
     
