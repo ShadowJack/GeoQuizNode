@@ -171,8 +171,10 @@ $ ->
   $('#thumbs_up, #thumbs_down'). on 'click', (event) ->
     event.preventDefault()
     up = ($(this).attr('id') == 'thumbs_up')
+    #do nothing if we clicked on the active button
     if (up && active_thumb == 1) or (!up && active_thumb == -1)
       return false
+      
     $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
       if status != 'ok' and status != '200'
         console.log status
@@ -182,16 +184,13 @@ $ ->
         return  
     , 'json'
     if up
-      
-      $(this).prop 'disabled', true
+      active_thumb = 1
       $(this).css 'background', "url(/img/thumbs_up_active20.png)"
-      $('#thumbs_down').prop 'disabled', false
       $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
       
     else
-      $(this).prop 'disabled', true
+      active_thumb = -1
       $(this).css 'background', "url(/img/thumbs_down_active20.png)"
-      $('#thumbs_up').prop 'disabled', false
       $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
     
     

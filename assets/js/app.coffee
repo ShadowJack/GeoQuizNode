@@ -84,7 +84,10 @@ $ ->
         #center the image
         top = (400 - $('#photo').height())/2
         $('#photo').css 'top', top
- 
+      
+      $('#thumbs_up').css 'background', 'url(/img/thumbs_up20)'
+      $('#thumbs_down').css 'background', 'url(/img/thumbs_down20)'
+      
   show_right_answere = ->
     #show the right answere
     if curr_photo.country
@@ -183,7 +186,7 @@ $ ->
         console.log "Error while changing photo score: " + JSON.parse data.error
         return  
     , 'json'
-    if up      
+    if up
       active_thumb = 1
       $(this).css 'background', "url(/img/thumbs_up_active20.png)"
       $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
