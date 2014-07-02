@@ -66,13 +66,13 @@ button.pure-button.btn-fixwidth
 #thumbs_down
   background:url(/img/thumbs_down20.png) no-repeat
 
-#thumbs_down:hover
+#thumbs_down:hover, #thumbs_down:visited
   background:url(/img/thumbs_down_active20.png) no-repeat
 
 #thumbs_up
   background:url(/img/thumbs_up20.png) no-repeat
 
-#thumbs_up:hover
+#thumbs_up:hover, #thumbs_up:visited
   background:url(/img/thumbs_up_active20.png) no-repeat
 
 .thumbs_down_container, .thumbs_up_container

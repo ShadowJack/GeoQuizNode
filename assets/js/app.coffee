@@ -85,8 +85,8 @@ $ ->
         top = (400 - $('#photo').height())/2
         $('#photo').css 'top', top
       
-      $('#thumbs_up').css 'background', 'url(/img/thumbs_up20)'
-      $('#thumbs_down').css 'background', 'url(/img/thumbs_down20)'
+      $('#thumbs_up').css 'background', 'url(/img/thumbs_up20.png)'
+      $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
       
   show_right_answere = ->
     #show the right answere
