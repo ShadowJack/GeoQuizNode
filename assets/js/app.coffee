@@ -85,9 +85,13 @@ $ ->
         top = (400 - $('#photo').height())/2
         $('#photo').css 'top', top
       
-      $('#thumbs_up').css 'background', 'url(/img/thumbs_up20.png)'
-      $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
-      
+      if active_thumb == 1
+        $('#thumbs_up').css 'background', 'url(/img/thumbs_up20.png)'
+        active_thumb = 0
+      if active_thumb == -1
+        $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
+        active_thumb = 0
+        
   show_right_answere = ->
     #show the right answere
     if curr_photo.country
