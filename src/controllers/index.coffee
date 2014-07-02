@@ -31,6 +31,7 @@ exports.load_new_photos = (req, res) ->
     result = []
     place_ids = []
     counter = 0
+    start_time = new Date().getTime()
     for photo in photos
       place_id = photo.place_id
      # console.log place_id
@@ -70,10 +71,14 @@ exports.load_new_photos = (req, res) ->
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           
           # if we have recieved the last place info - send result to the client
-          if counter == place_ids.length
+          if (new Date(). getTime() - start_time) > 5000
+            console.log 'waiting for too long... i will try again'
+            
+          else if counter == place_ids.length
             console.log "Last geo info recieved: " + result.length
             res.send result
-
+          
+          
       catch e
         console.log e
       
@@ -123,7 +128,6 @@ exports.thumbs = (req, res) ->
       else    # photo not in db and we are trying to decrease score - do nothing
         res.send {}
 
-#TODO: при щелчке на фотографии переходить на оригинал на фликере
 #TODO: добавить таймаут, в котором проверять, если не все данные о фотографиях загрузились, то повторить загрузку
 #TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
 
