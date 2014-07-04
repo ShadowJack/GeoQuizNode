@@ -1,3 +1,10 @@
+
+#TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
+
+#TODO: убрать правый отступ во вконтакте - КААААААК???
+
+
+
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
@@ -158,8 +165,3 @@ exports.thumbs = (req, res) ->
           done()
       else    # photo not in db and we are trying to decrease score - do nothing
         res.send {}
-
-#TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
-
-#TODO: убрать правый отступ во вконтакте - КААААААК???
-

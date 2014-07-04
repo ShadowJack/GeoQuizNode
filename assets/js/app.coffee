@@ -7,7 +7,32 @@ $ ->
   reqs_count = 0
   change_score_count = 0
   active_thumb = 0
+  timer = null
+  full_width = 0
   
+  stopTimer = ->
+    console.log 'get in Stop timer()'
+    if timer != null
+      console.log 'timer was not null'
+      clearInterval(timer)
+      timer = null
+      $('#timebar').css 'width', full_width
+  
+  resetTimer = ->
+    #reset the timer of back-count
+    stopTimer()
+    timer = setInterval(update_bar, 1000)
+    
+  
+  update_bar = ->
+    if $('#timebar').width() > full_width*0.1
+      $('#timebar').css 'width', $('#timebar').width() - full_width/20
+    else
+      # show the right answere
+      stopTimer()
+      change_score -5
+      show_right_answere(3000)
+    
   get_new_photos = ->
     page = Math.floor(Math.random()*266)
     #console.log page
@@ -33,7 +58,6 @@ $ ->
     
     $('#photo').hide()
     $('#circular').show()
-    
     i = Math.floor(Math.random()*photos.length)
     #get the url_z of a random photo
     curr_photo = photos[i]
@@ -83,8 +107,9 @@ $ ->
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
         top = (400 - $('#photo').height())/2
-        $('#photo').css 'top', top
-      
+        $('#photo').css('top', top)
+        resetTimer()
+        
       if active_thumb == 1
         $('#thumbs_up').css 'background', 'url(/img/thumbs_up20.png)'
         active_thumb = 0
@@ -92,21 +117,23 @@ $ ->
         $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
         active_thumb = 0
         
-  show_right_answere = ->
+  show_right_answere = (how_long) ->
     #show the right answere
     if curr_photo.country
       $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#639c79'
+      disable_buttons true
       window.setTimeout ->
+        disable_buttons false
         $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#E6E6E6'
         next_photo()
-      , 1000
+      , how_long
     else
       next_photo()
 
 
-  disable_buttons = (enable) ->
-      $('#skip').prop('disabled', enable)
-      $('.btn-choose').prop('disabled', enable)
+  disable_buttons = (disable) ->
+      $('#skip').prop('disabled', disable)
+      $('.btn-choose').prop('disabled', disable)
   
   change_score = (val) ->
     if score + val > 0 then score += val else score = 0
@@ -128,6 +155,8 @@ $ ->
 
   #-->-->-->-->-->-->-->-->-->-->-->--> 
   #The begining of the execution
+  full_width = $(window).width()
+  console.log full_width
   disable_buttons(true)
   $('#photo').hide()
   $.getJSON '/countries.json', (data) ->
@@ -158,21 +187,23 @@ $ ->
   '5.21'
   
   $('.btn-choose').on 'click', (event) ->
+    stopTimer()
     if this.innerHTML == curr_photo.country
       change_score 20
       next_photo()
     else
       change_score -10
-      show_right_answere()
+      show_right_answere(1000)
   
       
   $('#skip').on 'click', (event) ->
+    stopTimer()
     if photos.length == 0
       $('#skip').prop('disabled', true)
       get_new_photos()
       return false
     change_score -5
-    show_right_answere()
+    show_right_answere(1000)
     return true
     
   $('#thumbs_up, #thumbs_down'). on 'click', (event) ->
