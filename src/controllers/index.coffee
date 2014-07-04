@@ -1,6 +1,6 @@
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
-DATABASE_URL = 'postgres://ubkjolguybaoep:xDt8jcTHKchp55eShePRoEwnir@ec2-54-197-241-97.compute-1.amazonaws.com:5432/d35pck0slu7rhd'
+DATABASE_URL = process.env.DATABASE_URL
 request = require('request')
 pg = require('pg').native
 
