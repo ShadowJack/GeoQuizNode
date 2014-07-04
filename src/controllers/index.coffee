@@ -2,7 +2,7 @@ flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
 request = require('request')
-pg = require('pg').native
+pg = require('pg')
 
 exports.index = (req, res) ->
     res.render 'index'
