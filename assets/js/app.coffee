@@ -10,6 +10,7 @@ $ ->
   timer = null
   full_width = 0
   APP_ID = '4442537'
+  app_id = ''
   
   stopTimer = ->
     console.log 'get in Stop timer()'
@@ -108,7 +109,7 @@ $ ->
         id = curr_photo.res_url.match(/\d+$/)[0]
         
         $('#vk_like').empty()
-        VK.Widgets.Like("vk_like", {type: "mini", height: 20, pageTitle: "Угадай страну: " + curr_photo.country, pageUrl: 'https://vk.com/app' + APP_ID, }, id);
+        VK.Widgets.Like("vk_like", {type: "mini", height: 20, pageTitle: "Угадай страну: " + curr_photo.country, pageUrl: 'https://vk.com/app' + app_id }, id);
         
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
@@ -170,9 +171,8 @@ $ ->
     get_new_photos()
   
   VK.init (data) -> 
-    #document.location.search.match()[0]
-    #app_id = data.api_id
-    console.log document.location.search 
+    app_id = document.location.search.match(/user_id=\d+/)[0].slice 8
+    console.log 'https://vk.com/app' + app_id
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
