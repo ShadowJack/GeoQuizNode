@@ -106,7 +106,7 @@ $ ->
         $('#photo').show()
         id = curr_photo.res_url.match(/\d+$/)[0]
         console.log id
-        $('iframe').remove()
+        $('#vk_like').children().remove()
         VK.Widgets.Like("vk_like", {type: "mini", height: 20}, id);
         
         $('#photo_url').prop 'href', curr_photo.res_url
