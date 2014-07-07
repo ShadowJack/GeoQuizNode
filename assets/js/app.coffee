@@ -9,6 +9,7 @@ $ ->
   active_thumb = 0
   timer = null
   full_width = 0
+  app_id = ''
   
   stopTimer = ->
     console.log 'get in Stop timer()'
@@ -106,10 +107,8 @@ $ ->
         $('#photo').show()
         id = curr_photo.res_url.match(/\d+$/)[0]
         
-        if $('#vk_like').children().length != 0
-          console.log $('#vk_like').children()
-          $('#vk_like').children().remove()
-        VK.Widgets.Like("vk_like", {type: "mini", height: 20}, id);
+        $('#vk_like').empty()
+        VK.Widgets.Like("vk_like", {type: "mini", height: 20, pageTitle: "Угадай страну: " + curr_photo.country, pageUrl: 'https://vk.com/app' + app_id}, id);
         
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
@@ -171,6 +170,8 @@ $ ->
     get_new_photos()
   
   VK.init (data) -> 
+    app_id = data.api_id
+    console.log app_id 
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
