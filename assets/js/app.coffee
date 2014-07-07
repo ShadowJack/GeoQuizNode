@@ -104,6 +104,11 @@ $ ->
       $('#photo').attr('src', curr_photo.url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
+        id = curr_photo.res_url.match(/\d+$/)[0]
+        console.log id
+        
+        VK.Widgets.Like("vk_like", {type: "mini", height: 20}, id);
+        
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
         top = (400 - $('#photo').height())/2
@@ -221,6 +226,7 @@ $ ->
         console.log "Error while changing photo score: " + JSON.parse data.error
         return  
     , 'json'
+    
     if up
       $(this).css 'background', "url(/img/thumbs_up_active20.png)"
       if active_thumb == -1

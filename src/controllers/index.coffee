@@ -87,12 +87,12 @@ exports.load_new_photos = (req, res) ->
           counter += 1
           img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
           #console.log img_url
-          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8
+          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8, -1
           #console.log res_url
           geo_photo =
             url: img_url,
-            country: JSON.parse(data).countryName
-            res_url: res_url
+            country: JSON.parse(data).countryName,
+            res_url: res_url,
           console.log geo_photo
           if geo_photo.country != undefined
             result.push geo_photo
@@ -109,7 +109,6 @@ exports.load_new_photos = (req, res) ->
             get_from_flickr = true
             if get_from_db == true
               res.send result
-          
           
       catch e
         console.log e
