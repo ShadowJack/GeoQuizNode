@@ -25,7 +25,7 @@ $ ->
     
   
   update_bar = ->
-    if $('#timebar').width() > full_width*0.1
+    if $('#timebar').width() > full_width/20
       $('#timebar').css 'width', $('#timebar').width() - full_width/20
     else
       # show the right answere

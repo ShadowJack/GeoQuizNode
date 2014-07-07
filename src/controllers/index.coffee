@@ -1,8 +1,5 @@
-
-#TODO: брать 15 фотографий с фликера, а оставшиеся 5 с базы данных
-
-#TODO: убрать правый отступ во вконтакте - КААААААК???
-
+#TODO: добавить постинг на стену и в фотоальбом к пользователю
+#TODO: добавить рекламу
 
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
@@ -38,7 +35,6 @@ exports.load_new_photos = (req, res) ->
     result = []
     get_from_db = false
     get_from_flickr = false
-    #TODO: после загрузки из базы проверять, не загружены ли уже фотографии из фликера и наоборот
     pg.connect DATABASE_URL, (err, client, done) ->
       if err
         console.log err
