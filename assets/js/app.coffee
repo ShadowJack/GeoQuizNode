@@ -170,9 +170,9 @@ $ ->
     get_new_photos()
   
   VK.init (data) -> 
-    console.log document.location
+    #document.location.search.match()[0]
     #app_id = data.api_id
-    #console.log data 
+    console.log document.location.search 
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
