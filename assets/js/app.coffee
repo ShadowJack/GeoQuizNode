@@ -101,19 +101,6 @@ $ ->
         c_index = Math.floor Math.random()*possible_countries.length
         rand_button.html possible_countries[c_index]
         possible_countries.splice c_index, 1
-    
-      # if the first time when we load pic, then add like widget
-      if $('#photo').attr('src') == ''
-        id = curr_photo.res_url.match(/\d+$/)[0]
-        VK.Widgets.Like("vk_like", {
-        type: "mini",
-        height: 20,
-        pageTitle: "Угадай страну: " + curr_photo.country,
-        pageUrl: 'https://vk.com/app' + app_id,
-        pageImage: curr_photo.url,
-        text: curr_photo.res_url
-        }, 
-        id)
            
       #load new photo to the img element
       $('#photo').attr('src', curr_photo.url).on 'load', ->
@@ -204,6 +191,30 @@ $ ->
     window.top.location=window.top.location
   , 
   '5.21'
+  
+  $('#vk_share').on 'click', (event) ->
+    resource = $('#photo').attr 'src'
+    #if there is no photo then return without any actions
+    if resource == ''
+      return false
+      
+    # 1. Get the server url where to upload photo
+    vk.api 'photos.getWallUploadServer', {}, (response) ->
+      if not response
+        console.log "Can't get WallUploadServer"
+      else
+        # 2. Send a POST request to url, that was recieved
+        $.post response.upload_url, {photo: resource}, (upload_result) ->
+          if upload_result.photo == ''
+            return false
+          else
+            upload_result.user_id = uid
+            # 3. Save uploaded photo to the wall
+            Vk.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
+              console.log uploaded_photo
+              # 4. Create a post with the photo uploaded earlier
+              Vk.api 'wall.post', {attachments: 'photo' + uploaded_photo.owner_id + '_' + uploaded_photo.id + ',' + curr_photo.res_url}, (final_result) ->
+                console.log 'Successfully posted on the wall: ' + final_result.post_id
   
   $('.btn-choose').on 'click', (event) ->
     stopTimer()
