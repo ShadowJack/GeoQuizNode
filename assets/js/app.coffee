@@ -169,7 +169,7 @@ $ ->
   VK.init (data) -> 
     uid = document.location.search.match(/user_id=\d+/)[0].slice 8
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
-    console.log 'https://vk.com/app' + app_id
+    console.log VK
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
@@ -199,7 +199,7 @@ $ ->
       return false
       
     # 1. Get the server url where to upload photo
-    Vk.api 'photos.getWallUploadServer', {}, (response) ->
+    VK.api 'photos.getWallUploadServer', {}, (response) ->
       if not response
         console.log "Can't get WallUploadServer"
       else
@@ -210,10 +210,10 @@ $ ->
           else
             upload_result.user_id = uid
             # 3. Save uploaded photo to the wall
-            Vk.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
+            VK.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
               console.log uploaded_photo
               # 4. Create a post with the photo uploaded earlier
-              Vk.api 'wall.post', {attachments: 'photo' + uploaded_photo.owner_id + '_' + uploaded_photo.id + ',' + curr_photo.res_url}, (final_result) ->
+              VK.api 'wall.post', {attachments: 'photo' + uploaded_photo.owner_id + '_' + uploaded_photo.id + ',' + curr_photo.res_url}, (final_result) ->
                 console.log 'Successfully posted on the wall: ' + final_result.post_id
   
   $('.btn-choose').on 'click', (event) ->
