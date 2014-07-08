@@ -52,22 +52,12 @@ $ ->
         console.log 'New photos added, and photos.length = ' + photos.length
         disable_buttons(false)
         if $('#photo').attr('src') == ''
-          next_photo(->
-            VK.Widgets.Like("vk_like", {
-            type: "mini",
-            height: 20,
-            pageTitle: "Угадай страну: " + curr_photo.country,
-            pageUrl: 'https://vk.com/app' + app_id,
-            pageImage: curr_photo.url,
-            text: curr_photo.res_url
-            }, 
-            id)
-          )
+          next_photo()
         else if $('#photo').is(':hidden')
           $('#photo').show()
       
   
-  next_photo = (onFinish)->
+  next_photo = ()->
     
     $('#photo').hide()
     $('#circular').show()
@@ -112,15 +102,23 @@ $ ->
         rand_button.html possible_countries[c_index]
         possible_countries.splice c_index, 1
     
+      # if the first time when we load pic, then add like widget
+      if $('#photo').attr('src') == ''
+        id = curr_photo.res_url.match(/\d+$/)[0]
+        VK.Widgets.Like("vk_like", {
+        type: "mini",
+        height: 20,
+        pageTitle: "Угадай страну: " + curr_photo.country,
+        pageUrl: 'https://vk.com/app' + app_id,
+        pageImage: curr_photo.url,
+        text: curr_photo.res_url
+        }, 
+        id)
            
       #load new photo to the img element
       $('#photo').attr('src', curr_photo.url).on 'load', ->
         $('#circular').hide()
         $('#photo').show()
-        id = curr_photo.res_url.match(/\d+$/)[0]
-        
-        #$('#vk_like').empty()
-        
         
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
@@ -134,9 +132,6 @@ $ ->
       if active_thumb == -1
         $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
         active_thumb = 0
-      
-      if onFinish
-        onFinish()
         
   show_right_answere = (how_long) ->
     #show the right answere
