@@ -52,12 +52,22 @@ $ ->
         console.log 'New photos added, and photos.length = ' + photos.length
         disable_buttons(false)
         if $('#photo').attr('src') == ''
-          next_photo()
+          next_photo(->
+            VK.Widgets.Like("vk_like", {
+            type: "mini",
+            height: 20,
+            pageTitle: "Угадай страну: " + curr_photo.country,
+            pageUrl: 'https://vk.com/app' + app_id,
+            pageImage: curr_photo.url,
+            text: curr_photo.res_url
+            }, 
+            id)
+          )
         else if $('#photo').is(':hidden')
           $('#photo').show()
       
   
-  next_photo = ->
+  next_photo = (onFinish)->
     
     $('#photo').hide()
     $('#circular').show()
@@ -109,15 +119,8 @@ $ ->
         $('#photo').show()
         id = curr_photo.res_url.match(/\d+$/)[0]
         
-        $('#vk_like').empty()
-        VK.Widgets.Like("vk_like", {
-          type: "mini",
-          height: 20,
-          pageTitle: "Угадай страну: " + curr_photo.country,
-          pageUrl: 'https://vk.com/app' + app_id,
-          pageImage: curr_photo.url,
-          text: curr_photo.res_url
-        }, id);
+        #$('#vk_like').empty()
+        
         
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
@@ -131,6 +134,9 @@ $ ->
       if active_thumb == -1
         $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
         active_thumb = 0
+      
+      if onFinish
+        onFinish()
         
   show_right_answere = (how_long) ->
     #show the right answere
@@ -158,11 +164,11 @@ $ ->
         VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
           if resp.error or resp.response != 1
             console.log 'Error: Unable to update score! err: ' + resp.error
-      catch e 
+      catch e
         console.log e
     
     change_score_count += 1
-      
+    
     $('#score').fadeOut 100, ->
       $('#score').html score
       $('#score').fadeIn 100
