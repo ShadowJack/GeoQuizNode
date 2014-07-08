@@ -199,7 +199,7 @@ $ ->
       return false
       
     # 1. Get the server url where to upload photo
-    vk.api 'photos.getWallUploadServer', {}, (response) ->
+    Vk.api 'photos.getWallUploadServer', {}, (response) ->
       if not response
         console.log "Can't get WallUploadServer"
       else
