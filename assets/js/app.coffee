@@ -204,6 +204,7 @@ $ ->
         console.log "Can't get WallUploadServer: " + JSON.stringify response.error
       else
         # 2. Send a POST request to url, that was recieved
+        console.log 'I will POST photo to the ' + response.upload_url
         $.post response.upload_url, {photo: resource}, (upload_result) ->
           if upload_result.photo == ''
             return false
