@@ -204,14 +204,14 @@ $ ->
         console.log "Can't get WallUploadServer: " + JSON.stringify response.error
       else
         # 2. Send a POST request to url, that was recieved
-        console.log 'I will POST photo to the ' + JSON.stringify response
-        $.post response.upload_url, {photo: resource}, (upload_result) ->
+        console.log 'I will POST photo to the ' + JSON.stringify response.response.upload_url
+        $.post response.response.upload_url, {photo: resource}, (upload_result) ->
+          console.log 'Photo successfully uploaded: ' 
+          console.log upload_result
           if upload_result.photo == ''
             return false
           else
             upload_result.user_id = uid
-            console.log 'Photo successfully uploaded: ' 
-            console.log upload_result
             # 3. Save uploaded photo to the wall
             VK.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
               console.log uploaded_photo
