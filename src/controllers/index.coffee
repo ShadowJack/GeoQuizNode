@@ -14,6 +14,9 @@ exports.index = (req, res) ->
 
 exports.send_photo_to_vk = (req, res) ->
   request.post {url: req.body.url, json: {photo: req.body.photo}}, (err, resp, body) ->
+    console.log "Err:" + JSON.stringify err
+    console.log "Resp:" + JSON.stringify resp
+    console.log "Body:" + JSON.stringify body
     if err
       console.log err
     res.send body
@@ -100,7 +103,7 @@ exports.load_new_photos = (req, res) ->
             url: img_url,
             country: JSON.parse(data).countryName,
             res_url: res_url,
-          console.log geo_photo
+          #console.log geo_photo
           if geo_photo.country != undefined
             result.push geo_photo
           
