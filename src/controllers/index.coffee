@@ -20,7 +20,7 @@ exports.send_photo_to_vk = (req, res) ->
       rest.post(req.body.url, {
         multipart: true,
         data: {
-          'photo': new Buffer(body).toString('binary')}
+          'photo': new Buffer(body).toString('base64')}
       }).on 'complete', (data) ->
         res.send data
     
