@@ -8,19 +8,21 @@ geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
 request = require('request')
 pg = require('pg')
+rest = require('restler')
 
 exports.index = (req, res) ->
   res.render 'index'
 
 exports.send_photo_to_vk = (req, res) ->
-  console.log "Request body is: " + JSON.stringify req.body
-  request.post {url: req.body.url, json: {photo: req.body.photo}}, (err, resp, body) ->
-    console.log "Err:" + JSON.stringify err
-    console.log "Resp:" + JSON.stringify resp
-    console.log "Body:" + JSON.stringify body
-    if err
-      console.log err
-    res.send body
+  # download photo from flickr to the server
+  request.get {url: req.body.photo, encoding: null}, (err, resp, body) ->
+    if !err && resp.statusCode == 200
+      rest.post(req.body.url, {
+        multipart: true,
+        data: {
+          'photo': new Buffer(body).toString('binary')}
+      }).on 'complete', (data) ->
+        res.send data
     
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }

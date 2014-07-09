@@ -25,7 +25,8 @@
 		"express-session": "1.0.x",
 		"cookie-parser": "1.0.x",
 		"body-parser": "1.0.x",
-		"wrench": "1.5.x"
+		"wrench": "1.5.x",
+    "restler": "3.2.x"
 	}, 
 	"devDependencies": {
 		"coffee-script": "*",
