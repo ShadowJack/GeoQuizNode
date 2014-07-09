@@ -13,6 +13,7 @@ exports.index = (req, res) ->
   res.render 'index'
 
 exports.send_photo_to_vk = (req, res) ->
+  console.log "Request body is: " + JSON.stringify req.body
   request.post {url: req.body.url, json: {photo: req.body.photo}}, (err, resp, body) ->
     console.log "Err:" + JSON.stringify err
     console.log "Resp:" + JSON.stringify resp
