@@ -209,7 +209,8 @@ $ ->
             return false
           else
             upload_result.user_id = uid
-            console.log 'Photo successfully uploaded: ' + JSON.stringify upload_result
+            console.log 'Photo successfully uploaded: ' 
+            console.log upload_result
             # 3. Save uploaded photo to the wall
             VK.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
               console.log uploaded_photo
