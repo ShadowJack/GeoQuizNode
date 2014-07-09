@@ -10,7 +10,13 @@ request = require('request')
 pg = require('pg')
 
 exports.index = (req, res) ->
-    res.render 'index'
+  res.render 'index'
+
+exports.send_photo_to_vk = (req, res) ->
+  request.post {url: req.body.url, json: {photo: req.body.photo}}, (err, resp, body) ->
+    if err
+      console.log err
+    res.send body
     
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }

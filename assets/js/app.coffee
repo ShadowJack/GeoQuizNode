@@ -205,7 +205,7 @@ $ ->
       else
         # 2. Send a POST request to url, that was recieved
         console.log 'I will POST photo to the ' + JSON.stringify response.response.upload_url
-        $.post response.response.upload_url, {photo: resource}, (upload_result) ->
+        $.post '/send_photo_to_vk',  {url: response.response.upload_url, photo: resource}, (upload_result) ->
           console.log 'Photo successfully uploaded: ' 
           console.log upload_result
           if upload_result.photo == ''
