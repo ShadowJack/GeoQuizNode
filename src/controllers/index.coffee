@@ -2,6 +2,23 @@
 #TODO: добавить постинг на стену и в фотоальбом к пользователю
 #TODO: добавить рекламу
 
+#TODO: грузим в буфер, узнаем его длину, потом отдельно задаем параметры передаваемого файла(имя обязательно и длину тоже) с помощью
+# someModule.stream(function(err, stdout, stderr) {
+#  if (err) throw err;
+#
+#   var form = new FormData();
+#
+#   form.append('file', stdout, {
+#     filename: 'unicycle.jpg',
+#     contentType: 'image/jpg',
+#     knownLength: 19806
+#   });
+#
+#   form.submit('http://example.com/', function(err, res) {
+#     if (err) throw err;
+#     console.log('Done');
+#   });
+# });
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -15,12 +32,21 @@ exports.index = (req, res) ->
 
 exports.send_photo_to_vk = (req, res) ->
   # download photo from flickr to buffer
-  form_data = new FormData()
-  form_data.append 'photo', request(req.body.photo)
-  form_data.submit req.body.url, (err, resp)->
+  request.get {url: req.body.photo, encoding: null}, (err, resp, body) ->
     if err
-      console.log  err
-    res.send resp
+      console.log 'Error: ' + JSON.stringify(err)
+      return
+    if resp.statusCode != 200
+      console.log 'Wrong response status: ' + resp.statusCode
+      return
+    console.log body
+    
+    form_data = new FormData()
+    form_data.append 'photo', body
+    form_data.submit req.body.url, (err, resp)->
+      if err
+        console.log "Error submitting photo to upload: " + err
+      res.send resp
     
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
