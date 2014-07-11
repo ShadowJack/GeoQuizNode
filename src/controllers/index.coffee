@@ -52,8 +52,8 @@ exports.send_photo_to_vk = (req, res) ->
     
     read_stream = fs.createReadStream('public/img/life_is_random.jpg')
     read_stream.on 'open', ->
-      console.log read_stream
-      form_data.append 'photo', read_stream 
+      #console.log read_stream
+      form_data.append 'photo', read_stream
       #console.log form_data.getHeaders()
       #console.log form_data
       form_data.submit server_url, (err, resp)->
@@ -62,7 +62,7 @@ exports.send_photo_to_vk = (req, res) ->
         res.send resp
       
     read_stream.on 'error', (error) ->
-      console.log error
+      console.log 'ReadStream error: ' + error
     
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
