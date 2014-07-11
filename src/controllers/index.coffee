@@ -50,9 +50,9 @@ exports.send_photo_to_vk = (req, res) ->
     exec "ls -la .app/controllers/", (error, stdout, stderr) -> 
       sys.puts stdout
     
-    read_stream = fs.createReadStream('.app/controllers/life_is_random.jpg')
+    read_stream = fs.createReadStream('public/img/life_is_random.jpg')
     read_stream.on 'open', ->
-      #console.log read_stream
+      console.log read_stream
       form_data.append 'photo', read_stream 
       #console.log form_data.getHeaders()
       #console.log form_data
