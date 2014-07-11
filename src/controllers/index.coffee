@@ -25,6 +25,7 @@ geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
 request = require('request')
 pg = require('pg')
+fs = require('fs')
 FormData = require('form-data')
 
 exports.index = (req, res) ->
@@ -32,6 +33,7 @@ exports.index = (req, res) ->
 
 exports.send_photo_to_vk = (req, res) ->
   # download photo from flickr to buffer
+  server_url = req.body.url
   request.get {url: req.body.photo, encoding: null}, (err, resp, body) ->
     if err
       console.log 'Error: ' + err
@@ -41,9 +43,11 @@ exports.send_photo_to_vk = (req, res) ->
       return
     
     form_data = new FormData()
-    form_data.append 'photo', body
+    #form_data.append 'photo', body
+    form_data.append 'photo', fs.createReadStream('/img/life_is_random.jpg')
+    console.log form_data.getHeaders()
     console.log form_data
-    form_data.submit req.body.url, (err, resp)->
+    form_data.submit server_url, (err, resp)->
       if err
         console.log "Error submitting photo to upload: " + err
       res.send resp
