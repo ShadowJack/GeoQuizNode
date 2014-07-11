@@ -44,7 +44,9 @@ exports.send_photo_to_vk = (req, res) ->
     
     form_data = new FormData()
     #form_data.append 'photo', body
-    form_data.append 'photo', fs.createReadStream('/img/life_is_random.jpg')
+    read_stream = fs.createReadStream('/img/life_is_random.jpg')
+    console.log read_stream
+    form_data.append 'photo', read_stream 
     console.log form_data.getHeaders()
     console.log form_data
     form_data.submit server_url, (err, resp)->
