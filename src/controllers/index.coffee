@@ -42,7 +42,7 @@ exports.send_photo_to_vk = (req, res) ->
     
     form_data = new FormData()
     form_data.append 'photo', body
-      console.log form_data
+    console.log form_data
     form_data.submit req.body.url, (err, resp)->
       if err
         console.log "Error submitting photo to upload: " + err
