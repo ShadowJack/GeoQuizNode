@@ -28,6 +28,7 @@ pg = require('pg')
 fs = require('fs')
 FormData = require('form-data')
 
+
 exports.index = (req, res) ->
   res.render 'index'
 
@@ -46,6 +47,7 @@ exports.send_photo_to_vk = (req, res) ->
     #form_data.append 'photo', body
     read_stream = fs.createReadStream('/img/life_is_random.jpg')
     console.log read_stream
+    console.log __dirname
     form_data.append 'photo', read_stream 
     #console.log form_data.getHeaders()
     #console.log form_data
