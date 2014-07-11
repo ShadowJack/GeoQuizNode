@@ -45,15 +45,19 @@ exports.send_photo_to_vk = (req, res) ->
     
     form_data = new FormData()
     #form_data.append 'photo', body
-    read_stream = fs.createReadStream('life_is_random.jpg')
-    console.log read_stream
-    form_data.append 'photo', read_stream 
-    #console.log form_data.getHeaders()
-    #console.log form_data
-    form_data.submit server_url, (err, resp)->
-      if err
-        console.log "Error submitting photo to upload: " + err
-      res.send resp
+    read_stream = fs.createReadStream(__dirname + 'life_is_random.jpg')
+    read_stream.on 'open', ->
+      console.log read_stream
+      form_data.append 'photo', read_stream 
+      #console.log form_data.getHeaders()
+      #console.log form_data
+      form_data.submit server_url, (err, resp)->
+        if err
+          console.log "Error submitting photo to upload: " + err
+        res.send resp
+      
+    read_stream.on 'error', (error) ->
+      console.log error
     
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
