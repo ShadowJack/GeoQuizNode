@@ -27,7 +27,8 @@ request = require('request')
 pg = require('pg')
 fs = require('fs')
 FormData = require('form-data')
-
+exec = require('child_process').exec
+sys = require('sys')
 
 exports.index = (req, res) ->
   res.render 'index'
@@ -47,8 +48,9 @@ exports.send_photo_to_vk = (req, res) ->
     #form_data.append 'photo', body
     read_stream = fs.createReadStream(__dirname + '/life_is_random.jpg')
     read_stream.on 'open', ->
-      console.log read_stream
-      form_data.append 'photo', read_stream 
+      exec "ls -la", (error, stdout, stderr) -> sys.puts stdout
+      #console.log read_stream
+      #form_data.append 'photo', read_stream 
       #console.log form_data.getHeaders()
       #console.log form_data
       form_data.submit server_url, (err, resp)->
