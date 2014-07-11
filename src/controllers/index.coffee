@@ -46,14 +46,16 @@ exports.send_photo_to_vk = (req, res) ->
     
     form_data = new FormData()
     #form_data.append 'photo', body
+    
+    console.log 'read_stream is opened!!! executing ls -ls'
+    exec "ls -la", (error, stdout, stderr) -> 
+      sys.puts stdout
+      console.log 'Error: ' + error
+      console.log 'Stdout: ' + stdout
+      console.log 'Stderr: ' + stderr
+    
     read_stream = fs.createReadStream(__dirname + '/life_is_random.jpg')
     read_stream.on 'open', ->
-      console.log 'read_stream is opened!!! executing ls -ls'
-      exec "ls -la", (error, stdout, stderr) -> 
-        sys.puts stdout
-        console.log 'Error: ' + error
-        console.log 'Stdout: ' + stdout
-        console.log 'Stderr: ' + stderr
       #console.log read_stream
       #form_data.append 'photo', read_stream 
       #console.log form_data.getHeaders()
