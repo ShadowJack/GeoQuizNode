@@ -50,7 +50,9 @@ exports.send_photo_to_vk = (req, res) ->
     read_stream.on 'open', ->
       exec "ls -la", (error, stdout, stderr) -> 
         sys.puts stdout
-        console.log stdout
+        console.log 'Error: ' + error
+        console.log 'Stdout: ' + stdout
+        console.log 'Stderr: ' + stderr
       #console.log read_stream
       #form_data.append 'photo', read_stream 
       #console.log form_data.getHeaders()
