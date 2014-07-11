@@ -34,15 +34,15 @@ exports.send_photo_to_vk = (req, res) ->
   # download photo from flickr to buffer
   request.get {url: req.body.photo, encoding: null}, (err, resp, body) ->
     if err
-      console.log 'Error: ' + JSON.stringify(err)
+      console.log 'Error: ' + err
       return
     if resp.statusCode != 200
       console.log 'Wrong response status: ' + resp.statusCode
       return
-    console.log body
     
     form_data = new FormData()
     form_data.append 'photo', body
+      console.log form_data
     form_data.submit req.body.url, (err, resp)->
       if err
         console.log "Error submitting photo to upload: " + err
