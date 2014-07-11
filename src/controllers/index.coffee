@@ -47,8 +47,8 @@ exports.send_photo_to_vk = (req, res) ->
     read_stream = fs.createReadStream('/img/life_is_random.jpg')
     console.log read_stream
     form_data.append 'photo', read_stream 
-    console.log form_data.getHeaders()
-    console.log form_data
+    #console.log form_data.getHeaders()
+    #console.log form_data
     form_data.submit server_url, (err, resp)->
       if err
         console.log "Error submitting photo to upload: " + err
