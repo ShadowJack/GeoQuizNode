@@ -51,6 +51,7 @@ exports.send_photo_to_vk = (req, res) ->
       sys.puts stdout
     
     read_stream = fs.createReadStream('public/img/life_is_random.jpg')
+    console.log 'read_stream created!'
     read_stream.on 'open', ->
       #console.log read_stream
       form_data.append 'photo', read_stream
