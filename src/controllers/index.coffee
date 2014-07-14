@@ -2,23 +2,7 @@
 #TODO: добавить постинг на стену и в фотоальбом к пользователю
 #TODO: добавить рекламу
 
-#TODO: грузим в буфер, узнаем его длину, потом отдельно задаем параметры передаваемого файла(имя обязательно и длину тоже) с помощью
-# someModule.stream(function(err, stdout, stderr) {
-#  if (err) throw err;
-#
-#   var form = new FormData();
-#
-#   form.append('file', stdout, {
-#     filename: 'unicycle.jpg',
-#     contentType: 'image/jpg',
-#     knownLength: 19806
-#   });
-#
-#   form.submit('http://example.com/', function(err, res) {
-#     if (err) throw err;
-#     console.log('Done');
-#   });
-# });
+#TODO: попробовать вариант с restler
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -46,25 +30,31 @@ exports.send_photo_to_vk = (req, res) ->
     
     form_data = new FormData()
     #form_data.append 'photo', body
-    
-    exec "ls -la .app/controllers/", (error, stdout, stderr) -> 
-      sys.puts stdout
-    
-    read_stream = fs.createReadStream('public/img/life_is_random.jpg')
-    console.log 'read_stream created!'
-    read_stream.on 'open', ->
+    file = fs.readFile 'public/img/life_is_random.jpg', (e, d) ->
+      if e
+        console.log e
+        res.send e
+        return
+      
       #console.log read_stream
-      form_data.append 'photo', read_stream
+      console.log "Data length: " + d.length
+      form_data.append 'photo', d, {filename: 'life_is_random.jpg', contentType: 'image/jpeg', knownLength: d.length}
+      console.log 'Appended file to form_data...'
       #console.log form_data.getHeaders()
       #console.log form_data
       form_data.submit server_url, (err, resp)->
         if err
           console.log "Error submitting photo to upload: " + err
-        res.send resp
-      
-    read_stream.on 'error', (error) ->
-      console.log 'ReadStream error: ' + error
-    
+        resp.on 'data', (chunk) ->
+          console.log 'BODY: ' + chunk
+        
+        res.send {}  
+        #console.log resp
+        
+  
+    # read_stream.on 'error', (error) ->
+    #   console.log 'ReadStream error: ' + error
+    #  
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
   console.log 'Ready to fetch new photos...'
