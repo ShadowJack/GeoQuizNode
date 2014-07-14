@@ -208,15 +208,23 @@ $ ->
         $.post '/send_photo_to_vk',  {url: response.response.upload_url, photo: resource}, (upload_result) ->
           console.log 'Photo successfully uploaded: ' 
           console.log upload_result
-          if upload_result.photo == ''
+          if upload_result.photo == "[]"
             return false
           else
-            upload_result.user_id = uid
+            save_object =
+              #user_id: parseInt(uid),
+              photo: upload_result.photo,
+              server: upload_result.server,
+              hash: upload_result.hash
+            
             # 3. Save uploaded photo to the wall
-            VK.api 'photos.saveWallPhoto', upload_result, (uploaded_photo) ->
-              console.log uploaded_photo
+            console.log "Will save on wall: ", save_object
+            VK.api 'photos.saveWallPhoto', save_object, (uploaded_photo) ->
+              console.log "Saved photo to wall"
+              att = 'photo' + uploaded_photo.response[0].owner_id + '_' + uploaded_photo.response[0].id + ',' + curr_photo.res_url
+              console.log "Attachment: " + att
               # 4. Create a post with the photo uploaded earlier
-              VK.api 'wall.post', {attachments: 'photo' + uploaded_photo.owner_id + '_' + uploaded_photo.id + ',' + curr_photo.res_url}, (final_result) ->
+              VK.api 'wall.post', {attachments: att}, (final_result) ->
                 console.log 'Successfully posted on the wall: ' + final_result.post_id
   
   $('.btn-choose').on 'click', (event) ->

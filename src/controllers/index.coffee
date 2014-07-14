@@ -7,10 +7,11 @@
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
+restler = require('restler')
 request = require('request')
 pg = require('pg')
 fs = require('fs')
-FormData = require('form-data')
+#FormData = require('form-data')
 exec = require('child_process').exec
 sys = require('sys')
 
@@ -28,33 +29,19 @@ exports.send_photo_to_vk = (req, res) ->
       console.log 'Wrong response status: ' + resp.statusCode
       return
     
-    form_data = new FormData()
-    #form_data.append 'photo', body
-    file = fs.readFile 'public/img/life_is_random.jpg', (e, d) ->
-      if e
-        console.log e
-        res.send e
-        return
-      
-      #console.log read_stream
-      console.log "Data length: " + d.length
-      form_data.append 'photo', d, {filename: 'life_is_random.jpg', contentType: 'image/jpeg', knownLength: d.length}
-      console.log 'Appended file to form_data...'
-      #console.log form_data.getHeaders()
-      #console.log form_data
-      form_data.submit server_url, (err, resp)->
-        if err
-          console.log "Error submitting photo to upload: " + err
-        resp.on 'data', (chunk) ->
-          console.log 'BODY: ' + chunk
-        
-        res.send {}  
-        #console.log resp
+    restler.post(server_url, 
+    {
+      multipart: true,
+      parser: restler.parsers.json,
+      data: {
+        'photo': restler.file('public/img/life_is_random.jpg', null, fs.statSync('public/img/life_is_random.jpg').size, null, 'image/jpeg')
+    }
+    }).on('complete', (data, response) ->
+        console.log 'Restler: ', data
+        res.send data
+      )
         
   
-    # read_stream.on 'error', (error) ->
-    #   console.log 'ReadStream error: ' + error
-    #  
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
   console.log 'Ready to fetch new photos...'
@@ -98,6 +85,7 @@ exports.load_new_photos = (req, res) ->
           
           result.push (c_ph)
         get_from_db = true
+        console.log "Got photos from db; flickr status: " + get_from_flickr
         if get_from_flickr == true
           res.send result
     
@@ -149,8 +137,8 @@ exports.load_new_photos = (req, res) ->
             get_from_flickr = true
             
           else if counter == place_ids.length
-            console.log "Last geo info recieved: " + result.length
             get_from_flickr = true
+            console.log "Photos from flickr are ready; db status: " + get_from_db
             if get_from_db == true
               res.send result
           
