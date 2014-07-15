@@ -1,4 +1,5 @@
-#TODO: исправить работу ссылок на исходник изображения, разобраться почему не загружаются фотографии на сервер вконтакте
+#TODO: останавливать отсчет времени, когда пользователь нажал: добавить на стену или в альбом
+#TODO: исправить работу ссылок на исходник изображения
 #TODO: добавить постинг на стену и в фотоальбом к пользователю
 #TODO: добавить рекламу
 
@@ -9,7 +10,6 @@ restler = require('restler')
 request = require('request')
 pg = require('pg')
 fs = require('fs')
-#FormData = require('form-data')
 exec = require('child_process').exec
 sys = require('sys')
 
@@ -117,7 +117,7 @@ exports.load_new_photos = (req, res) ->
           counter += 1
           img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
           #console.log img_url
-          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8, -1
+          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8
           #console.log res_url
           geo_photo =
             url: img_url,

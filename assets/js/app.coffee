@@ -13,18 +13,22 @@ $ ->
   app_id = ''
   uid = ''
   
-  stopTimer = ->
+  resumeTimer = ->
+    timer = setInterval(update_bar, 1000)
+  
+  cleanTimer = ->
     console.log 'get in Stop timer()'
     if timer != null
       console.log 'timer was not null'
       clearInterval(timer)
       timer = null
-      $('#timebar').css 'width', full_width
+      
   
   resetTimer = ->
     #reset the timer of back-count
-    stopTimer()
-    timer = setInterval(update_bar, 1000)
+    cleanTimer()
+    $('#timebar').css 'width', full_width
+    resumeTimer()
     
   
   update_bar = ->
@@ -32,7 +36,8 @@ $ ->
       $('#timebar').css 'width', $('#timebar').width() - full_width/20
     else
       # show the right answere
-      stopTimer()
+      cleanTimer()
+      $('#timebar').css 'width', full_width
       change_score -5
       show_right_answere(3000)
     
@@ -197,6 +202,15 @@ $ ->
     #if there is no photo then return without any actions
     if resource == ''
       return false
+    
+    cleanTimer()
+    #TODO: когда случаются события: постинг на стену или отклонение окошка с поддтверждением постинга - возобновляем таймер, убираем сплэшскрин
+    VK.addCallback 'onWallPostSave', ->
+      console.log "I'm inside the callback of onWallPostSave"
+      resumeTimer()
+    VK.addCallback 'onWallPostCancel', ->
+      console.log "I'm inside the callback of onWallPostCancel"
+      resumeTimer()
       
     # 1. Get the server url where to upload photo
     VK.api 'photos.getWallUploadServer', {}, (response) ->
@@ -225,10 +239,11 @@ $ ->
               console.log "Attachment: " + att
               # 4. Create a post with the photo uploaded earlier
               VK.api 'wall.post', {attachments: att}, (final_result) ->
-                console.log 'Successfully posted on the wall: ' + final_result.post_id
+                console.log 'Successfully posted on the wall: ', final_result
+                resumeTimer()
   
   $('.btn-choose').on 'click', (event) ->
-    stopTimer()
+    cleanTimer()
     if this.innerHTML == curr_photo.country
       change_score 20
       next_photo()
@@ -238,7 +253,7 @@ $ ->
   
       
   $('#skip').on 'click', (event) ->
-    stopTimer()
+    cleanTimer()
     if photos.length == 0
       $('#skip').prop('disabled', true)
       get_new_photos()
