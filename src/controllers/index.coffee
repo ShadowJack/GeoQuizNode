@@ -2,8 +2,6 @@
 #TODO: добавить постинг на стену и в фотоальбом к пользователю
 #TODO: добавить рекламу
 
-#TODO: попробовать вариант с restler
-
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
 DATABASE_URL = process.env.DATABASE_URL
@@ -34,8 +32,8 @@ exports.send_photo_to_vk = (req, res) ->
       multipart: true,
       parser: restler.parsers.json,
       data: {
-        'photo': restler.file('public/img/life_is_random.jpg', null, fs.statSync('public/img/life_is_random.jpg').size, null, 'image/jpeg')
-    }
+        'photo': restler.data('life_is_random.jpg', 'image/jpeg', body)
+      }
     }).on('complete', (data, response) ->
         console.log 'Restler: ', data
         res.send data
