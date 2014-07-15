@@ -41,6 +41,17 @@ $ ->
       change_score -5
       show_right_answere(3000)
     
+  pauseScreen = ->
+    cleanTimer() 
+    console.log 'Pausing screen'
+    $('#splash_screen').css 'visibility', 'visible'
+    
+  removePauseScreen = ->
+    resumeTimer()  
+    console.log 'Unpausing screen'    
+    $('#splash_screen').css 'visibility', 'hidden'
+    
+    
   get_new_photos = ->
     page = Math.floor(Math.random()*266)
     #console.log page
@@ -203,15 +214,8 @@ $ ->
     if resource == ''
       return false
     
-    cleanTimer()
-    #TODO: когда случаются события: постинг на стену или отклонение окошка с поддтверждением постинга - возобновляем таймер, убираем сплэшскрин
-    VK.addCallback 'onWallPostSave', ->
-      console.log "I'm inside the callback of onWallPostSave"
-      resumeTimer()
-    VK.addCallback 'onWallPostCancel', ->
-      console.log "I'm inside the callback of onWallPostCancel"
-      resumeTimer()
-      
+    pauseScreen()
+    
     # 1. Get the server url where to upload photo
     VK.api 'photos.getWallUploadServer', {}, (response) ->
       if response.error
@@ -240,7 +244,7 @@ $ ->
               # 4. Create a post with the photo uploaded earlier
               VK.api 'wall.post', {attachments: att}, (final_result) ->
                 console.log 'Successfully posted on the wall: ', final_result
-                resumeTimer()
+                removePauseScreen()
   
   $('.btn-choose').on 'click', (event) ->
     cleanTimer()
