@@ -1,4 +1,7 @@
 $ ->
+  #----------------------------------------------------
+  # Global vars:
+  
   photos = []
   countries = []
   score = 0
@@ -12,6 +15,14 @@ $ ->
   APP_ID = '4442537'
   app_id = ''
   uid = ''
+
+
+#----------------------------------------------------
+# Utils, routines...
+#
+  
+  #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
+  # Time left  
   
   resumeTimer = ->
     timer = setInterval(update_bar, 1000)
@@ -40,7 +51,9 @@ $ ->
       $('#timebar').css 'width', full_width
       change_score -5
       show_right_answere(3000)
-    
+
+  #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
+  # Spalsh screen when need to pause  
   pauseScreen = ->
     cleanTimer() 
     console.log 'Pausing screen'
@@ -50,8 +63,48 @@ $ ->
     resumeTimer()  
     console.log 'Unpausing screen'    
     $('#splash_screen').css 'visibility', 'hidden'
+  
+  #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
+  # UI control  
+  show_right_answere = (how_long) ->
+    #show the right answere
+    if curr_photo.country
+      $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#639c79'
+      disable_buttons true
+      window.setTimeout ->
+        disable_buttons false
+        $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#E6E6E6'
+        next_photo()
+      , how_long
+    else
+      next_photo()
+
+
+  disable_buttons = (disable) ->
+      $('#skip').prop('disabled', disable)
+      $('.btn-choose').prop('disabled', disable)
+  
+  #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
+  # Score manipulations
+  change_score = (val) ->
+    if score + val > 0 then score += val else score = 0
+    if change_score_count % 3 == 0
+      
+      try
+        VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
+          if resp.error or resp.response != 1
+            console.log 'Error: Unable to update score! err: ' + resp.error
+      catch e
+        console.log e
     
+    change_score_count += 1
     
+    $('#score').fadeOut 100, ->
+      $('#score').html score
+      $('#score').fadeIn 100
+  
+  #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
+  # The most complicated logic - get new set of photos and display new photo
   get_new_photos = ->
     page = Math.floor(Math.random()*266)
     #console.log page
@@ -135,80 +188,11 @@ $ ->
       if active_thumb == -1
         $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
         active_thumb = 0
-        
-  show_right_answere = (how_long) ->
-    #show the right answere
-    if curr_photo.country
-      $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#639c79'
-      disable_buttons true
-      window.setTimeout ->
-        disable_buttons false
-        $('.btn-choose:contains("' + curr_photo.country + '")').css 'background-color', '#E6E6E6'
-        next_photo()
-      , how_long
-    else
-      next_photo()
 
-
-  disable_buttons = (disable) ->
-      $('#skip').prop('disabled', disable)
-      $('.btn-choose').prop('disabled', disable)
+  #-------------------------------------------------
+  # Callbacks on the most of ui events
   
-  change_score = (val) ->
-    if score + val > 0 then score += val else score = 0
-    if change_score_count % 3 == 0
-      
-      try
-        VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
-          if resp.error or resp.response != 1
-            console.log 'Error: Unable to update score! err: ' + resp.error
-      catch e
-        console.log e
-    
-    change_score_count += 1
-    
-    $('#score').fadeOut 100, ->
-      $('#score').html score
-      $('#score').fadeIn 100
-
-
-  #-->-->-->-->-->-->-->-->-->-->-->--> 
-  #The begining of the execution
-  full_width = $(window).width()
-  console.log full_width
-  disable_buttons(true)
-  $('#photo').hide()
-  $.getJSON '/countries.json', (data) ->
-    countries = data["countries"]
-    get_new_photos()
-  
-  VK.init (data) -> 
-    uid = document.location.search.match(/user_id=\d+/)[0].slice 8
-    app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
-    console.log VK
-    VK.api 'storage.get', {key: 'score'}, (data) ->
-      if data.response
-        if data.response == ''
-          #the first time in the app
-          score = 0
-          VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
-            if resp.error or resp.response != 1
-              console.log 'Error: Unable to update score!'
-        else
-          score = parseInt data.response
-        
-        #set the score
-        $('#score').html score
-      else
-        console.log 'Error: ' + JSON.stringify(data.error)
-        window.top.location=window.top.location
-  ,->
-    #reload page
-    window.top.location=window.top.location
-  , 
-  '5.21'
-  
-  $('#vk_share').on 'click', (event) ->
+  onVkShare = (event) ->
     resource = $('#photo').attr 'src'
     #if there is no photo then return without any actions
     if resource == ''
@@ -245,8 +229,9 @@ $ ->
               VK.api 'wall.post', {attachments: att}, (final_result) ->
                 console.log 'Successfully posted on the wall: ', final_result
                 removePauseScreen()
-  
-  $('.btn-choose').on 'click', (event) ->
+
+
+  onChoose = (event) ->
     cleanTimer()
     if this.innerHTML == curr_photo.country
       change_score 20
@@ -254,9 +239,8 @@ $ ->
     else
       change_score -10
       show_right_answere(1000)
-  
-      
-  $('#skip').on 'click', (event) ->
+
+  onSkip = (event) ->
     cleanTimer()
     if photos.length == 0
       $('#skip').prop('disabled', true)
@@ -266,34 +250,82 @@ $ ->
     show_right_answere(1000)
     return true
     
-  $('#thumbs_up, #thumbs_down'). on 'click', (event) ->
+  onThumbs = (event) ->
     event.preventDefault()
     up = ($(this).attr('id') == 'thumbs_up')
     #do nothing if we clicked on the active button
     if (up && active_thumb == 1) or (!up && active_thumb == -1)
       return false
-      
-    $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
-      if status != 'ok' and status != '200'
-        console.log status
-        return
-      if data.error
-        console.log "Error while changing photo score: " + JSON.parse data.error
-        return  
-    , 'json'
-    
     if up
       $(this).css 'background', "url(/img/thumbs_up_active20.png)"
       if active_thumb == -1
         $('#thumbs_down').css 'background', "url(/img/thumbs_down20.png)"      
       active_thumb = 1
-      
     else
       $(this).css 'background', "url(/img/thumbs_down_active20.png)"
       if active_thumb == 1
         $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
       active_thumb = -1
-    return false
     
+    $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
+      if status != 'ok' and status != '200'
+        console.log status
+        return false
+      if data.error
+        console.log "Error while changing photo score: " + JSON.parse data.error
+        return false
+    , 'json'
+    return true
+    
+    
+  onVkInitSuccess = (data) -> 
+    uid = document.location.search.match(/user_id=\d+/)[0].slice 8
+    app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
+    console.log VK
+    VK.api 'storage.get', {key: 'score'}, (data) ->
+      if data.response
+        if data.response == ''
+          #the first time in the app
+          score = 0
+          VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
+            if resp.error or resp.response != 1
+              console.log 'Error: Unable to update score!'
+        else
+          score = parseInt data.response
+      
+        #set the score
+        $('#score').html score
+      else
+        console.log 'Error: ' + JSON.stringify(data.error)
+        window.top.location=window.top.location
+  
+  onVkInitFail = ->
+    #reload page
+    window.top.location=window.top.location
+  
+  #-->-->-->-->-->-->-->-->-->-->-->--> 
+  #The begining of the execution
+  full_width = $(window).width()
+  console.log full_width
+  
+  disable_buttons(true)
+  $('#photo').hide()
+  
+  $.getJSON '/countries.json', (data) ->
+    countries = data["countries"]
+    get_new_photos()
+  
+  VK.init onVkInitSuccess, onVkInitFail, '5.21'
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  $('#vk_share').on 'click', onVkShare
+  
+  $('.btn-choose').on 'click', onChoose
+  
+  $('#skip').on 'click', onSkip
+    
+  $('#thumbs_up, #thumbs_down'). on 'click', onThumbs
+      
+        
     
     
