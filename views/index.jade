@@ -6,7 +6,7 @@ block content
     #score
     .container-fluid
       .row.full-width
-        .span12.full_width
+        .span12.full-width
           .photo-container
             #circular.marginLeft
               #circular_1.circular
@@ -18,8 +18,11 @@ block content
               #circular_7.circular
               #circular_8.circular 
               .clearfix
-            a#photo_url
-              img#photo.img-polaroid.center-block(src="", alt="Guess the country...")
+            img#photo.img-polaroid.center-block(src="", alt="Guess the country...")
+      .row.full-width
+        .span12.full-width
+          #photo_url_container
+            a#photo_url.center-block Оригинал на flickr
       .row
         .span12
           .row
@@ -33,12 +36,12 @@ block content
             .span6
               button#btn4.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
       .row
-        .span3.share_container
+        .span3.share-container
           a#vk_share на стену
           a#vk_save_photo в альбом
         .span2.skip-container
           button#skip.pure-button.btn-default.center-block(href="") Пропустить
-        .span3.thumbs_container
+        .span3.thumbs-container
           a#thumbs_down
           a#thumbs_up
  
