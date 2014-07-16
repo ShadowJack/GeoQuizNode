@@ -56,12 +56,12 @@ $ ->
   # Spalsh screen when need to pause  
   pauseScreen = ->
     cleanTimer() 
-    console.log 'Pausing screen'
+    $('#circular').show()
     $('#splash_screen').css 'visibility', 'visible'
     
   removePauseScreen = ->
     resumeTimer()  
-    console.log 'Unpausing screen'    
+    $('#circular').hide()
     $('#splash_screen').css 'visibility', 'hidden'
   
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
@@ -127,7 +127,10 @@ $ ->
       
   
   next_photo = ()->
-    
+    if photos.length == 0
+      get_new_photos()
+      return
+      
     $('#photo').hide()
     $('#circular').show()
     i = Math.floor(Math.random()*photos.length)
