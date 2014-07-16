@@ -203,6 +203,9 @@ $ ->
     if resource == ''
       return false
     
+    # add score to the photo even if posting is unsuccessful
+    thumb(true)
+    
     pauseScreen()
     
     # 1. Get the server url where to upload photo
@@ -235,9 +238,15 @@ $ ->
                 console.log 'Successfully posted on the wall: ', final_result
                 removePauseScreen()
   
+  
+  
   # Save current photo to user's album
+  #
   onVkSavePhoto = (event) ->
     pauseScreen()
+    
+    # add score to the photo even if posting is unsuccessful
+    thumb(true)
     
     VK.api 'storage.get', {key: 'albumId'}, (data) ->
       if data.error
@@ -310,7 +319,8 @@ $ ->
             }, (final_result) ->
             console.log 'Successfully posted to the album: ', final_result
             removePauseScreen()
-    
+  # The guess has been made
+  #
   onChoose = (event) ->
     cleanTimer()
     if this.innerHTML == curr_photo.country
@@ -319,7 +329,9 @@ $ ->
     else
       change_score -10
       show_right_answere(1000)
-
+  
+  # Skip to the next photo
+  #
   onSkip = (event) ->
     cleanTimer()
     if photos.length == 0
@@ -330,6 +342,8 @@ $ ->
     show_right_answere(1000)
     return true
     
+  # Thumbs up or down pressed
+  #
   onThumbs = (event) ->
     event.preventDefault()
     up = ($(this).attr('id') == 'thumbs_up')
@@ -347,17 +361,25 @@ $ ->
         $('#thumbs_up').css 'background', "url(/img/thumbs_up20.png)"   
       active_thumb = -1
     
+    thumb(up)
+    return true
+   
+  # Util - posts thumb (up or down) to server -> db
+  #  
+  thumb = (up) ->
     $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
-      if status != 'ok' and status != '200'
-        console.log status
+      if status != 'ok' and status != '200' and status != 'success'
+        console.log 'Wrong status: ', status
         return false
       if data.error
         console.log "Error while changing photo score: " + JSON.parse data.error
         return false
     , 'json'
-    return true
-    
-    
+  
+  # When load the app we init VK JSapi
+  # this callback gets the score of current user and sets 
+  # some useful variables to interact with vk
+  #
   onVkInitSuccess = (data) -> 
     uid = document.location.search.match(/user_id=\d+/)[0].slice 8
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
@@ -378,10 +400,14 @@ $ ->
         console.log 'Error: ' + JSON.stringify(data.error)
         window.top.location=window.top.location
   
+  # If the initialization of VK JSapi wasn't successful then reload page and try gain
+  #
   onVkInitFail = ->
-    #reload page
     window.top.location=window.top.location
   
+  
+  
+
 #-->-->-->-->-->-->-->-->-->-->-->--> 
 #The begining of the execution
  
@@ -398,6 +424,7 @@ $ ->
   VK.init onVkInitSuccess, onVkInitFail, '5.21'
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Add events listeners
   $('#vk_share').on 'click', onVkShare
   
   $('#vk_save_photo').on 'click', onVkSavePhoto
@@ -406,7 +433,7 @@ $ ->
   
   $('#skip').on 'click', onSkip
     
-  $('#thumbs_up, #thumbs_down'). on 'click', onThumbs
+  $('#thumbs_up, #thumbs_down').on 'click', onThumbs
       
         
     

@@ -2,6 +2,7 @@
 #TODO: при постинге также добавлять очко для фотографии, как и при событии thumbs_up
 #TODO: добавить рекламу
 #TODO: пост о том, как загрузить картинку на сервер вконтакте
+#TODO: подсказки при первом посещении приложения
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -133,7 +134,9 @@ exports.load_new_photos = (req, res) ->
           if (new Date(). getTime() - start_time) > 5000
             console.log 'waiting for too long... i will try again'
             get_from_flickr = true
-            
+            if get_from_db == true
+              res.send result
+              
           else if counter == place_ids.length
             get_from_flickr = true
             console.log "Photos from flickr are ready; db status: " + get_from_db
