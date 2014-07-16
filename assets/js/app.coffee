@@ -89,7 +89,6 @@ $ ->
   change_score = (val) ->
     if score + val > 0 then score += val else score = 0
     if change_score_count % 3 == 0
-      
       try
         VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
           if resp.error or resp.response != 1
@@ -98,10 +97,22 @@ $ ->
         console.log e
     
     change_score_count += 1
+
+    field = (if val > 0 then $('#up_score') else $('#down_score'))
+    field.html (if val > 0 then '+' + val else val)
+    field.fadeIn 200, ->
+      curr_top = parseInt(field.css('top').match /\d+/)
+      field.animate {
+        top: (curr_top - val*2) + 'px',
+        opacity: 0.0
+      }, 600, ->
+        field.css 'top', curr_top
+        field.css 'opacity', 1.0
+        field.css 'display', 'none'
     
-    $('#score').fadeOut 100, ->
+    $('#score').fadeOut 300, ->
       $('#score').html score
-      $('#score').fadeIn 100
+      $('#score').fadeIn 300
   
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
   # The most complicated logic - get new set of photos and display new photo

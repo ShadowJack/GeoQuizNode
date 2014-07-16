@@ -3,7 +3,6 @@
 #TODO: добавить рекламу
 #TODO: пост о том, как загрузить картинку на сервер вконтакте
 #TODO: подсказки при первом посещении приложения
-#TODO: открывать в новом окне(вкладке) ссылку на оригинал фотографии
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -76,7 +75,7 @@ exports.load_new_photos = (req, res) ->
           console.log err
           get_from_db = true
           return done()
-        #console.log result
+        console.log result
         for r in reslt.rows
           c_ph = 
             url: r.url_z,

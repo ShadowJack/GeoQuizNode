@@ -4,6 +4,8 @@ block content
   #splash_screen
   .container
     #score
+    #up_score +20
+    #down_score -10
     .container-fluid
       .row.full-width
         .span12.full-width
@@ -22,7 +24,7 @@ block content
       .row.full-width
         .span12.full-width
           #photo_url_container
-            a#photo_url.center-block Оригинал на flickr
+            a#photo_url.center-block(onclick="this.target='_blank';") Оригинал на flickr
       .row
         .span12
           .row
