@@ -195,6 +195,8 @@ $ ->
 #-------------------------------------------------
 # Callbacks on the most of ui events
   
+  # Post current photo to user's wall
+  #
   onVkShare = (event) ->
     resource = $('#photo').attr 'src'
     #if there is no photo then return without any actions
@@ -232,49 +234,70 @@ $ ->
               VK.api 'wall.post', {attachments: att}, (final_result) ->
                 console.log 'Successfully posted on the wall: ', final_result
                 removePauseScreen()
-
+  
+  # Save current photo to user's album
   onVkSavePhoto = (event) ->
     pauseScreen()
     
     VK.api 'storage.get', {key: 'albumId'}, (data) ->
       if data.error
         console.log data.error
+        removePauseScreen()
         return false
       if data.response == ''
         console.log 'No album - try to create one'
-        album_options = {
-          title: 'Фото из приложения "Страновед"',
-          description: 'Фотографии из приложения "Страновед" (vk.com/app' + app_id + ')',
-          comment_privacy: 2 # друзья и друзья друзей
-          privacy: 3 # только я TODO: в продакшене исправить на 0 - доступен всем
-        }
-        VK.api 'photos.createAlbum', album_options, (data) ->
+        createAlbumAndSavePhoto()
+      else
+        # check if album we'd created at the first posting is still available
+        VK.api 'photos.getAlbums', {album_ids: parseInt(data.response)}, (data) ->
           if data.error
             console.log data.error
+            removePauseScreen()
             return false
-          id = data.response.id
-          VK.api 'storage.set', {key: 'albumId', value: id}, (data) ->
-            if data.error
-              console.log data.error
-          savePhoto(id)
-      else
-        savePhoto(parseInt data.response)
+          if data.response.count == 0
+            console.log 'Album not found: ', data.response
+            createAlbumAndSavePhoto()
+          else
+            savePhoto(parseInt data.response)
+  
+  createAlbumAndSavePhoto = ->
+    album_options = {
+      title: 'Фото из приложения "Страновед"',
+      description: 'Фотографии из приложения "Страновед" (vk.com/app' + app_id + ')',
+      comment_privacy: 2 # друзья и друзья друзей
+      privacy: 3 # только я TODO: в продакшене исправить на 0 - доступен всем
+    }
+    VK.api 'photos.createAlbum', album_options, (data) ->
+      if data.error
+        console.log data.error
+        removePauseScreen()
+        return false
+      id = data.response.id
+      VK.api 'storage.set', {key: 'albumId', value: id}, (data) ->
+        if data.error
+          console.log data.error
+          removePauseScreen()
+          return false
+      savePhoto(id)
   
   savePhoto = (alb_id) ->
     console.log alb_id
     resource = $('#photo').attr 'src'
     #if there is no photo then return without any actions
     if resource == ''
+      removePauseScreen()
       return false
       
     VK.api 'photos.getUploadServer', {album_id: alb_id }, (data) ->
       if data.error
         console.log data.error
+        removePauseScreen()
         return false
       $.post '/send_photo_to_vk',  {url: data.response.upload_url, photo: resource}, (upload_result) ->
         console.log 'Photo successfully uploaded: ' 
         console.log upload_result
         if upload_result.photo == "[]"
+          removePauseScreen()
           return false
         else
           # 4. Create a post with the photo uploaded earlier
