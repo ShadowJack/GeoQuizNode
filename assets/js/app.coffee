@@ -189,8 +189,8 @@ $ ->
         $('#thumbs_down').css 'background', 'url(/img/thumbs_down20.png)'
         active_thumb = 0
 
-  #-------------------------------------------------
-  # Callbacks on the most of ui events
+#-------------------------------------------------
+# Callbacks on the most of ui events
   
   onVkShare = (event) ->
     resource = $('#photo').attr 'src'
@@ -230,7 +230,61 @@ $ ->
                 console.log 'Successfully posted on the wall: ', final_result
                 removePauseScreen()
 
-
+  onVkSavePhoto = (event) ->
+    pauseScreen()
+    
+    VK.api 'storage.get', {key: 'albumId'}, (data) ->
+      if data.error
+        console.log data.error
+        return false
+      if data.response == ''
+        console.log 'No album - try to create one'
+        album_options = {
+          title: 'Фото из приложения "Страновед"',
+          description: 'Фотографии из приложения "Страновед" (vk.com/app' + app_id + ')',
+          comment_privacy: 2 # друзья и друзья друзей
+          privacy: 3 # только я TODO: в продакшене исправить на 0 - доступен всем
+        }
+        VK.api 'photos.createAlbum', album_options, (data) ->
+          if data.error
+            console.log data.error
+            return false
+          id = data.response.id
+          VK.api 'storage.set', {key: 'albumId', value: id}, (data) ->
+            if data.error
+              console.log data.error
+          savePhoto(id)
+      else
+        savePhoto(parseInt data.response)
+  
+  savePhoto = (alb_id) ->
+    console.log alb_id
+    resource = $('#photo').attr 'src'
+    #if there is no photo then return without any actions
+    if resource == ''
+      return false
+      
+    VK.api 'photos.getUploadServer', {album_id: alb_id }, (data) ->
+      if data.error
+        console.log data.error
+        return false
+      $.post '/send_photo_to_vk',  {url: data.response.upload_url, photo: resource}, (upload_result) ->
+        console.log 'Photo successfully uploaded: ' 
+        console.log upload_result
+        if upload_result.photo == "[]"
+          return false
+        else
+          # 4. Create a post with the photo uploaded earlier
+          VK.api 'photos.save', {
+            album_id: upload_result.aid,
+            server: upload_result.server,
+            photos_list: upload_result.photos_list,
+            hash: upload_result.hash,
+            caption: 'Оригинал: ' + curr_photo.res_url
+            }, (final_result) ->
+            console.log 'Successfully posted to the album: ', final_result
+            removePauseScreen()
+    
   onChoose = (event) ->
     cleanTimer()
     if this.innerHTML == curr_photo.country
@@ -281,7 +335,6 @@ $ ->
   onVkInitSuccess = (data) -> 
     uid = document.location.search.match(/user_id=\d+/)[0].slice 8
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
-    console.log VK
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
@@ -303,8 +356,9 @@ $ ->
     #reload page
     window.top.location=window.top.location
   
-  #-->-->-->-->-->-->-->-->-->-->-->--> 
-  #The begining of the execution
+#-->-->-->-->-->-->-->-->-->-->-->--> 
+#The begining of the execution
+ 
   full_width = $(window).width()
   console.log full_width
   
@@ -319,6 +373,8 @@ $ ->
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   $('#vk_share').on 'click', onVkShare
+  
+  $('#vk_save_photo').on 'click', onVkSavePhoto
   
   $('.btn-choose').on 'click', onChoose
   
