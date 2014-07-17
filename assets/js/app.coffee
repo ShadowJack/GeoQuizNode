@@ -395,6 +395,8 @@ $ ->
         return false
     , 'json'
   
+  
+  
   # When load the app we init VK JSapi
   # this callback gets the score of current user and sets 
   # some useful variables to interact with vk
@@ -402,6 +404,16 @@ $ ->
   onVkInitSuccess = (data) -> 
     uid = document.location.search.match(/user_id=\d+/)[0].slice 8
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
+    
+    
+    VK.addCallback 'onWindowBlur', ->
+      console.log 'Pause game'
+      pauseScreen()
+  
+    VK.addCallback 'onWindowFocus', ->
+      console.log 'Resume game'
+      removePauseScreen()
+    
     VK.api 'storage.get', {key: 'score'}, (data) ->
       if data.response
         if data.response == ''
