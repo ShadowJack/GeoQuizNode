@@ -24,7 +24,7 @@ block content
       .row.full-width
         .span12.full-width
           #photo_url_container
-            a#photo_url.center-block(onclick="this.target='_blank';") Оригинал на flickr
+            a#photo_url.center-block(onclick="this.target='_blank';") Оригинал на flickr.com
       .row
         .span12
           .row
@@ -39,8 +39,12 @@ block content
               button#btn4.pure-button.btn-fixwidth.btn-choose.center-block(href="") *
       .row
         .span3.share-container
-          a#vk_share на стену
-          a#vk_save_photo в альбом
+          .share-subcontainer
+            img#wall_post_img.left(src="/img/wall_post.png")
+            a#vk_share.left на стену
+          .share-subcontainer
+            img#album_save_img.left(src="/img/album_save.png")
+            a#vk_save_photo.left в альбом
         .span2.skip-container
           button#skip.pure-button.btn-default.center-block(href="") Пропустить
         .span3.thumbs-container
