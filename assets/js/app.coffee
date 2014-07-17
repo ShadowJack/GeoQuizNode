@@ -212,6 +212,7 @@ $ ->
     resource = $('#photo').attr 'src'
     #if there is no photo then return without any actions
     if resource == ''
+      console.log "Can't get the photo res"
       return false
     
     # add score to the photo even if posting is unsuccessful
@@ -254,6 +255,12 @@ $ ->
   # Save current photo to user's album
   #
   onVkSavePhoto = (event) ->
+    resource = $('#photo').attr 'src'
+    #if there is no photo then return without any actions
+    if resource == ''
+      console.log "Can't get the photo res"
+      return false
+      
     pauseScreen()
     
     # add score to the photo even if posting is unsuccessful
@@ -261,7 +268,7 @@ $ ->
     
     VK.api 'storage.get', {key: 'albumId'}, (data) ->
       if data.error
-        console.log data.error
+        console.log "storage.get(albumId) error: ", data.error
         removePauseScreen()
         return false
       if data.response == ''
@@ -271,14 +278,15 @@ $ ->
         # check if album we'd created at the first posting is still available
         VK.api 'photos.getAlbums', {album_ids: parseInt(data.response)}, (data) ->
           if data.error
-            console.log data.error
+            console.log "Error while getting albums: ", data.error
             removePauseScreen()
             return false
           if data.response.count == 0
             console.log 'Album not found: ', data.response
             createAlbumAndSavePhoto()
           else
-            savePhoto(parseInt data.response)
+            console.log data.response
+            savePhoto(data.response.items[0].id)
   
   createAlbumAndSavePhoto = ->
     album_options = {
@@ -301,10 +309,9 @@ $ ->
       savePhoto(id)
   
   savePhoto = (alb_id) ->
-    console.log alb_id
     resource = $('#photo').attr 'src'
-    #if there is no photo then return without any actions
-    if resource == ''
+    if resource == "Can't find the resource of photo"
+      console.log ''
       removePauseScreen()
       return false
       
@@ -378,6 +385,7 @@ $ ->
   # Util - posts thumb (up or down) to server -> db
   #  
   thumb = (up) ->
+    console.log "Thumb up: ", up
     $.post '/thumbs', {up: up, photo: curr_photo}, (data, status, jqXHR)->
       if status != 'ok' and status != '200' and status != 'success'
         console.log 'Wrong status: ', status

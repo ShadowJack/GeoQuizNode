@@ -1,8 +1,7 @@
-#TODO: иконка постинга на стену и загрузки в альбом
 #TODO: добавить рекламу
-#TODO: пост о том, как загрузить картинку на сервер вконтакте
 #TODO: подсказки при первом посещении приложения
-#TODO: иногда не загружает из бд и поэтому нифига не работает
+#TODO: пост о том, как загрузить картинку на сервер вконтакте
+
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -75,7 +74,7 @@ exports.load_new_photos = (req, res) ->
           console.log err
           get_from_db = true
           return done()
-        console.log result
+        console.log "Get from db: ", result
         for r in reslt.rows
           c_ph = 
             url: r.url_z,

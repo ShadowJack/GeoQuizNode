@@ -2,18 +2,20 @@
 @import 'lib/bootstrap/bootstrap.styl' // bootstrap-stylus
 @import 'nib'
 
+//------------------------------------------------
+// General rules
+
 .container
   margin-top: 20px
   width: 700px
   position: relative
-
-h2
-  smooth-button()
-  width: 90%
-  font-size: 2em
-
-h3
-  margin-top: 20px
+  
+.row
+  margin-top: 10px
+  margin-right: -20px
+  
+.left
+  float: left
 
 a
   color: #6F8B8B
@@ -21,6 +23,18 @@ a
 
 a:hover
   color: #9DC0AE
+  
+.center-block
+  margin-left: auto
+ 	margin-right: auto
+ 	display: table
+
+.full-width
+  width: 100%
+
+
+//------------------------------------------------
+// Top elements
 
 #timebar
   position: absolute
@@ -36,12 +50,9 @@ a:hover
   z-index: 100
   visibility: hidden
 
+//------------------------------------------------
+// Photo
 
-
-.row
-  margin-top: 10px
-  margin-right: -20px
-  
 .photo-container
   width: 640px
   height: 400px
@@ -52,18 +63,14 @@ a:hover
   max-height: 400px
   display: inline-block
   position: relative
-  
+
+//------------------------------------------------
+// Buttons
+
 .skip-container
   float: left
   width: 100px  
   
-.center-block
-  margin-left: auto
- 	margin-right: auto
- 	display: table
-  
-.full-width
-  width: 100%
 
 .btn-choose
   width: 250px
@@ -71,16 +78,12 @@ a:hover
 button.pure-button.btn-fixwidth
   margin-left: -45px
 
-#thumbs_down
-  float: right
-  right: 100px
-  top: 7px
-  
-#thumbs_up
-  float: right
-  top: 2px
-  
+
+//------------------------------------------------
+// Thumbs
+
 #thumbs_down ,#thumbs_up
+  float: right
   position: relative
   cursor: pointer
   border: none
@@ -88,10 +91,23 @@ button.pure-button.btn-fixwidth
   height: 20px
 
 #thumbs_down
+  right: 20px
+  top: 7px
   background:url(/img/thumbs_down20.png) no-repeat
-
+  
 #thumbs_up
+  right: -30px
+  top: 2px
   background:url(/img/thumbs_up20.png) no-repeat
+
+#eval_photo
+  width: 180px
+  margin-top: 6px
+  float: left
+  text-align: right
+  
+//------------------------------------------------
+// Share links
 
 .share-container, .thumbs-container
   width: 246px
@@ -113,9 +129,10 @@ button.pure-button.btn-fixwidth
 #vk_save_photo
   margin-top: 8px
   margin-left: 6px
-  
-.left
-  float: left
+
+
+//------------------------------------------------
+// Score field
 
 #score
   absolute: top 468px left 278px
@@ -125,7 +142,10 @@ button.pure-button.btn-fixwidth
   font-size: 26px
   text-align: center
   padding-top: 8px
-  
+
+//------------------------------------------------
+// Score changing information
+
 #up_score, #down_score
   absolute: top 474px left 400px
   width: 20px
@@ -139,6 +159,9 @@ button.pure-button.btn-fixwidth
 
 #down_score
   color: #B32735
+
+//------------------------------------------------
+// Url to the original photo on flickr.com
 
 #photo_url
   text-align: center
