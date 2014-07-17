@@ -62,30 +62,30 @@ exports.load_new_photos = (req, res) ->
       return
     
     result = []
-    get_from_db = false
+    get_from_db = true
     get_from_flickr = false
-    pg.connect DATABASE_URL, (err, client, done) ->
-      if err
-        console.log err
-        return done()
-      
-      query = client.query "SELECT * FROM photos ORDER BY random() LIMIT 1;", (err, reslt) ->
-        if err
-          console.log err
-          get_from_db = true
-          return done()
-        console.log "Get from db: ", result
-        for r in reslt.rows
-          c_ph = 
-            url: r.url_z,
-            country: r.country,
-            res_url: r.res_url
-          
-          result.push (c_ph)
-        get_from_db = true
-        console.log "Got photos from db; flickr status: " + get_from_flickr
-        if get_from_flickr == true
-          res.send result
+    # pg.connect DATABASE_URL, (err, client, done) ->
+    #   if err
+    #     console.log err
+    #     return done()
+    #
+#      query  = client.query "SELECT * FROM photos ORDER BY random() LIMIT 1;", (err, reslt) ->
+#         if err
+#           console.log err
+#           get_from_db = true
+#           return done()
+#         console.log "Get from db: ", result
+#         for r in reslt.rows
+#           c_ph =
+#             url: r.url_z,
+#             country: r.country,
+#             res_url: r.res_url
+#
+#           result.push (c_ph)
+#         get_from_db = true
+#         console.log "Got photos from db; flickr status: " + get_from_flickr
+#         if get_from_flickr == true
+#           res.send result
     
     
     place_ids = []
