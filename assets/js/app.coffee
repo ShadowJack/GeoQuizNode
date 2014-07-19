@@ -327,16 +327,16 @@ $ ->
           removePauseScreen()
           return false
         else
-          # 4. Create a post with the photo uploaded earlier
           VK.api 'photos.save', {
             album_id: upload_result.aid,
             server: upload_result.server,
             photos_list: upload_result.photos_list,
             hash: upload_result.hash,
-            caption: 'Оригинал: ' + curr_photo.res_url
-            }, (final_result) ->
+            caption: 'Оригинал: ' + curr_photo.res_url + '\nФото из приложения: vk.com/app' + app_id
+          }, (final_result) ->
             console.log 'Successfully posted to the album: ', final_result
             removePauseScreen()
+            
   # The guess has been made
   #
   onChoose = (event) ->
