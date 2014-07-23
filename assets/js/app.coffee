@@ -144,6 +144,7 @@ $ ->
       
     $('#photo').hide()
     $('#circular').show()
+    loadNextPhoto()
     i = Math.floor(Math.random()*photos.length)
     #get the url_z of a random photo
     curr_photo = photos[i]
@@ -151,7 +152,6 @@ $ ->
     #if we picked the photo with te same country as previous - try again
     #only if we have all photos with the same country then we have no options
     
-    #TODO: отлавливать случаи, когда все оставшиеся фотографии с одной страны
     if (prev_country and prev_country == curr_photo.country)
       next_photo()
     else    
@@ -293,7 +293,7 @@ $ ->
       title: 'Фото из приложения "Страновед"',
       description: 'Фотографии из приложения "Страновед" (vk.com/app' + app_id + ')',
       comment_privacy: 2 # друзья и друзья друзей
-      privacy: 3 # только я TODO: в продакшене исправить на 0 - доступен всем
+      privacy: 0 # только я TODO: в продакшене исправить на 0 - доступен всем
     }
     VK.api 'photos.createAlbum', album_options, (data) ->
       if data.error
