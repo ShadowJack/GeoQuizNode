@@ -144,7 +144,7 @@ $ ->
       
     $('#photo').hide()
     $('#circular').show()
-    loadNextPhoto()
+    
     i = Math.floor(Math.random()*photos.length)
     #get the url_z of a random photo
     curr_photo = photos[i]
@@ -293,7 +293,7 @@ $ ->
       title: 'Фото из приложения "Страновед"',
       description: 'Фотографии из приложения "Страновед" (vk.com/app' + app_id + ')',
       comment_privacy: 2 # друзья и друзья друзей
-      privacy: 0 # только я TODO: в продакшене исправить на 0 - доступен всем
+      privacy: 0
     }
     VK.api 'photos.createAlbum', album_options, (data) ->
       if data.error
