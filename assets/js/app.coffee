@@ -158,7 +158,7 @@ $ ->
       #remove new photo from the array of remaining photos
       photos.splice i, 1
       #console.log 'Removed one photo, new length: ' + photos.length
-      if photos.length < 5
+      if photos.length < 8
         get_new_photos()
       
       #skip this photo if it has no country information
