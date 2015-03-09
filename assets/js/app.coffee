@@ -432,7 +432,7 @@ $ ->
         window.top.location=window.top.location
     
     #TODO: get info about leaders and add them in leaderboard
-    $.post '/user_score', {uid: uid, score: score}
+    #$.post '/user_score', {uid: uid, score: score}
   # If the initialization of VK JSapi wasn't successful then reload page and try gain
   #
   onVkInitFail = ->
