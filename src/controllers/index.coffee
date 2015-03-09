@@ -116,9 +116,10 @@ exports.load_new_photos = (req, res) ->
     place_ids = []
     counter = 0
     start_time = new Date().getTime()
+    sent_requests_count = 0
     for photo in photos
       place_id = photo.place_id
-     # console.log place_id
+      # console.log place_id
       
       if place_ids.indexOf(place_id) != -1
         #console.log 'place_id is dublicated'
@@ -131,26 +132,25 @@ exports.load_new_photos = (req, res) ->
       req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
       uri=' + photo.url_z + '&res_url=' + res_url
       
-      console.log 'Geonames request: ' + req_uri
+      console.log sent_requests_count #'Geonames request: ' + req_uri
       try
         request.get req_uri, (error, rsp, data) ->
           if error
             console.log 'Error: ' + error
-            return
-            
-          console.log 'I recieved response from geonames:'
-          counter += 1
-          img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
-          #console.log img_url
-          res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8
-          #console.log res_url
-          geo_photo =
-            url: img_url,
-            country: JSON.parse(data).countryName,
-            res_url: res_url,
-          #console.log geo_photo
-          if geo_photo.country != undefined
-            result.push geo_photo
+          else
+            counter += 1
+            console.log counter
+            img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
+            #console.log img_url
+            res_url = (rsp.client._httpMessage.path.match /res_url\=.+/)[0].slice 8
+            #console.log res_url
+            geo_photo =
+              url: img_url,
+              country: JSON.parse(data).countryName,
+              res_url: res_url,
+            #console.log geo_photo
+            if geo_photo.country != undefined
+              result.push geo_photo
           
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           
@@ -158,17 +158,19 @@ exports.load_new_photos = (req, res) ->
           if (new Date(). getTime() - start_time) > 5000
             console.log 'waiting for too long... i will try again'
             get_from_flickr = true
-            if get_from_db == true
+            if get_from_db == true and not res.headerSent
               res.send result
               
           else if counter == place_ids.length
             get_from_flickr = true
             console.log "Photos from flickr are ready; db status: " + get_from_db
-            if get_from_db == true
+            if get_from_db == true and not res.headerSent
               res.send result
           
       catch e
         console.log e
+        if not res.headerSent
+          res.send result
       
     console.log "I've sent all geo requests and now waiting for responses"
 
