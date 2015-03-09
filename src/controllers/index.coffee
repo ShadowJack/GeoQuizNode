@@ -137,7 +137,7 @@ exports.load_new_photos = (req, res) ->
       sent_requests_count += 1
       console.log sent_requests_count #'Geonames request: ' + req_uri
       try
-        request.get req_uri, (error, rsp, data) ->
+        request.get {url: req_uri, timeout: 5000}, (error, rsp, data) ->
           if error
             console.log 'In geonames response: ' + error
           else
@@ -157,19 +157,22 @@ exports.load_new_photos = (req, res) ->
           
           #console.log "[result]: " + result.length + " [photos]: " + photos.length + " photo.url=" + photo.url_z
           
-          # if we have recieved the last place info - send result to the client
-          if (new Date(). getTime() - start_time) > 5000
-            console.log 'waiting for too long... i will try again'
-            get_from_flickr = true
-            if get_from_db == true
-              res.send result
+          try
+            # if we have recieved the last place info - send result to the client
+            if (new Date(). getTime() - start_time) > 5000
+              console.log 'waiting for too long... i will try again'
+              get_from_flickr = true
+              if get_from_db == true
+                res.send result
               
-          else if counter == place_ids.length
-            get_from_flickr = true
-            console.log "Photos from flickr are ready; db status: " + get_from_db
-            if get_from_db == true
-              res.send result
-          
+            else if counter == place_ids.length
+              get_from_flickr = true
+              console.log "Photos from flickr are ready; db status: " + get_from_db
+              if get_from_db == true
+                res.send result
+          catch ex
+            console.log ex
+            
       catch e
         console.log e
         res.send result
