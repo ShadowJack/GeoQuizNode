@@ -165,6 +165,7 @@ exports.load_new_photos = (req, res) ->
           else if counter == place_ids.length
             get_from_flickr = true
             console.log "Photos from flickr are ready; db status: " + get_from_db
+            console.log "Headers are already sent: " + res.headerSent
             if get_from_db == true and not res.headerSent
               res.send result
           
