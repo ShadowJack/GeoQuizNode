@@ -139,6 +139,7 @@ exports.load_new_photos = (req, res) ->
             console.log 'Error: ' + error
           else
             counter += 1
+            sent_requests_count += 1
             console.log counter
             img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
             #console.log img_url
