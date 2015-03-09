@@ -132,6 +132,7 @@ exports.load_new_photos = (req, res) ->
       req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
       uri=' + photo.url_z + '&res_url=' + res_url
       
+      sent_requests_count += 1
       console.log sent_requests_count #'Geonames request: ' + req_uri
       try
         request.get req_uri, (error, rsp, data) ->
@@ -139,7 +140,6 @@ exports.load_new_photos = (req, res) ->
             console.log 'Error: ' + error
           else
             counter += 1
-            sent_requests_count += 1
             console.log counter
             img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
             #console.log img_url
