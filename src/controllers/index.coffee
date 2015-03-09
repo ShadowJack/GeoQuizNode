@@ -78,7 +78,9 @@ exports.load_new_photos = (req, res) ->
   request.get req_url, (err, resp, body) ->
     if err
       console.log 'Error: ' + err
+      res.send []
       return
+      
     photos = JSON.parse(String(body).slice 14, -1).photos.photo
     
     if photos.length == 0
@@ -137,7 +139,7 @@ exports.load_new_photos = (req, res) ->
       try
         request.get req_uri, (error, rsp, data) ->
           if error
-            console.log 'Error: ' + error
+            console.log 'In geonames response: ' + error
           else
             counter += 1
             console.log counter
@@ -159,6 +161,7 @@ exports.load_new_photos = (req, res) ->
           if (new Date(). getTime() - start_time) > 5000
             console.log 'waiting for too long... i will try again'
             get_from_flickr = true
+            console.log "Headers are already sent: " + res.headerSent
             if get_from_db == true and not res.headerSent
               res.send result
               
