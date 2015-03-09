@@ -43,8 +43,8 @@ $ ->
     
   
   update_bar = ->
-    if $('#timebar').width() > full_width/20
-      $('#timebar').css 'width', $('#timebar').width() - full_width/20
+    if $('#timebar').width() > ( full_width / 20 )
+      $('#timebar').css 'width', $('#timebar').width() - ( full_width / 20 )
     else
       # show the right answere
       cleanTimer()
@@ -192,7 +192,7 @@ $ ->
         
         $('#photo_url').prop 'href', curr_photo.res_url
         #center the image
-        top = (400 - $('#photo').height())/2
+        top = (400 - $('#photo').height()) / 2
         $('#photo').css('top', top)
         resetTimer()
         
@@ -430,7 +430,9 @@ $ ->
       else
         console.log 'Error: ' + JSON.stringify(data.error)
         window.top.location=window.top.location
-  
+    
+    #TODO: get info about leaders and add them in leaderboard
+    $.post '/user_score', {uid: uid, score: score}
   # If the initialization of VK JSapi wasn't successful then reload page and try gain
   #
   onVkInitFail = ->

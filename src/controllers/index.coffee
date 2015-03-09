@@ -1,7 +1,6 @@
 #TODO: прелоад следующей фотографии
 #TODO: добавить рекламу
 #TODO: подсказки при первом посещении приложения
-#TODO: пост о том, как загрузить картинку на сервер вконтакте
 
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
@@ -39,8 +38,33 @@ exports.send_photo_to_vk = (req, res) ->
         console.log 'Restler: ', data
         res.send data
       )
+
+"""
+post /user_score?uid=vk_uid
+
+Updates user score into db.
+If there is no such user in db - create it.
+"""
+exports.user_score = (req, res) ->
+  pg.connect DATABASE_URL, (err, client, done) ->
+    if err
+      console.log err
+      return done()
+
+    query = client.query "SELECT * FROM users WHERE id=" + req.body.uid + ";", (err, reslt) ->
+      if err
+        console.log err
+        return done()
+      console.log "Get from db: ", result
+      if result.length == 0
+        # create new user
+        client.query "INSERT INTO users VALUES (" + req.body.uid + ", " + req.body.score + ");", (err, reslt) ->
+          if err
+            console.log err
+            return done()
+          return
         
-  
+      
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
   console.log 'Ready to fetch new photos...'
@@ -107,11 +131,11 @@ exports.load_new_photos = (req, res) ->
       req_uri = 'http://api.geonames.org/countrySubdivisionJSON?username='+geonames_username+'&lat='+photo.latitude+'&lng='+photo.longitude+'&lang=ru&\
       uri=' + photo.url_z + '&res_url=' + res_url
       
-      #console.log req_uri
+      console.log 'Geonames request: ' + req_uri
       try
         request.get req_uri, (error, rsp, data) ->
           if error
-            console.log 'Error: ' + err
+            console.log 'Error: ' + error
             return
             
           #console.log 'I recieved response from geonames:'

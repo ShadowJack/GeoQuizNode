@@ -18,6 +18,9 @@ module.exports = (app) ->
   app.post '/send_photo_to_vk', (req, res, next) ->
     routeMvc('index', 'send_photo_to_vk', req, res, next)
   
+  app.post '/user_score', (req, res, next) ->
+    routeMvc('index', 'user_score', req, res, next)
+  
   app.post '/thumbs', (req, res, next) ->
     routeMvc('index', 'thumbs', req, res, next)
 

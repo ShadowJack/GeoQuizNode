@@ -8,7 +8,7 @@ exports.setEnvironment = (env) ->
       exports.DEBUG_WARN = true
       exports.DEBUG_ERROR = true
       exports.DEBUG_CLIENT = true
-      process.env['DATABASE_URL'] = 'pg://admin:123@localhost:5432/art_quiz'
+      process.env['DATABASE_URL'] = 'pg://shadowjack:@localhost:5432/art_quiz'
       
     when "testing"
       exports.DEBUG_LOG = true
