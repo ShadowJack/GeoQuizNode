@@ -71,7 +71,7 @@ exports.load_new_photos = (req, res) ->
   #fetch the next photo in the array of recent photos from Flickr
   req_url = 'https://api.flickr.com/services/rest?\
   format=json&method=flickr.photos.search&tags=landmark\
-  &sort=relevance&content_type=1&has_geo=1&per_page=15&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
+  &sort=relevance&content_type=1&has_geo=1&per_page=10&page='+req.query.page+'&extras=geo,url_z&api_key='+flickr_api_key
   console.log req_url
   
   #prepare the request to flickr.api  
