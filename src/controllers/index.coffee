@@ -138,7 +138,7 @@ exports.load_new_photos = (req, res) ->
             console.log 'Error: ' + error
             return
             
-          #console.log 'I recieved response from geonames:'
+          console.log 'I recieved response from geonames:'
           counter += 1
           img_url = (rsp.client._httpMessage.path.match /uri\=.+&/)[0].slice 4, -1
           #console.log img_url
