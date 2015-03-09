@@ -161,21 +161,18 @@ exports.load_new_photos = (req, res) ->
           if (new Date(). getTime() - start_time) > 5000
             console.log 'waiting for too long... i will try again'
             get_from_flickr = true
-            console.log "Headers are already sent: " + res.headerSent
-            if get_from_db == true and not res.headerSent
+            if get_from_db == true
               res.send result
               
           else if counter == place_ids.length
             get_from_flickr = true
             console.log "Photos from flickr are ready; db status: " + get_from_db
-            console.log "Headers are already sent: " + res.headerSent
-            if get_from_db == true and not res.headerSent
+            if get_from_db == true
               res.send result
           
       catch e
         console.log e
-        if not res.headerSent
-          res.send result
+        res.send result
       
     console.log "I've sent all geo requests and now waiting for responses"
 
