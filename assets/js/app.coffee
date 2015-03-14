@@ -5,6 +5,7 @@ $ ->
   photos = []
   countries = []
   score = 0
+  saved_score = 0
   prev_country = ''
   curr_photo = {}
   reqs_count = 0
@@ -49,7 +50,7 @@ $ ->
       # show the right answere
       cleanTimer()
       $('#timebar').css 'width', full_width
-      change_score -5
+      change_score(-5)
       show_right_answere(3000)
 
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
@@ -87,12 +88,17 @@ $ ->
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
   # Score manipulations
   change_score = (val) ->
-    if score + val > 0 then score += val else score = 0
-    if change_score_count % 3 == 0
+    #if score + val > 0 then score += val else score = 0
+    saved_score += val
+    score += val
+    if change_score_count % 2 == 0
       try
-        VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
-          if resp.error or resp.response != 1
-            console.log 'Error: Unable to update score! err: ' + resp.error
+        console.log "Current user id: " + uid
+        $.post '/user_score', {uid: uid, score: saved_score}, (result) ->
+          if result.error
+            console.log result.error
+          else
+            saved_score = 0
       catch e
         console.log e
     
@@ -402,9 +408,9 @@ $ ->
   # some useful variables to interact with vk
   #
   onVkInitSuccess = (data) -> 
-    uid = document.location.search.match(/user_id=\d+/)[0].slice 8
+    uid = document.location.search.match(/viewer_id=\d+/)[0].slice 10
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
-    
+    console.log "Current user id init: " + uid 
     
     VK.addCallback 'onWindowBlur', ->
       console.log 'Pause game'
@@ -415,18 +421,21 @@ $ ->
       removePauseScreen()
     
     VK.api 'storage.get', {key: 'score'}, (data) ->
+      #TODO: send data to server, if there is no such user on server, than we create it
+      # if not - we send it actual score to the app
       if data.response
-        if data.response == ''
-          #the first time in the app
-          score = 0
-          VK.api 'storage.set', {key: 'score', value: score.toString()}, (resp) ->
-            if resp.error or resp.response != 1
-              console.log 'Error: Unable to update score!'
-        else
+        if data.response != ''
           score = parseInt data.response
-      
-        #set the score
-        $('#score').html score
+
+        $.get '/user_score', {uid: uid, score: score}, (db_score) ->
+          if db_score.error
+            console.log "Error while getting user score: " + db_score.error
+            window.top.location=window.top.location
+          else
+            console.log "Got user user score from db: " + db_score.score
+            score = db_score.score
+            #set the score
+            $('#score').html score
       else
         console.log 'Error: ' + JSON.stringify(data.error)
         window.top.location=window.top.location

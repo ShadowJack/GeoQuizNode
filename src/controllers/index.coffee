@@ -1,7 +1,3 @@
-#TODO: прелоад следующей фотографии
-#TODO: добавить рекламу
-#TODO: подсказки при первом посещении приложения
-
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
@@ -40,31 +36,75 @@ exports.send_photo_to_vk = (req, res) ->
       )
 
 """
-post /user_score?uid=vk_uid
+post /user_score?uid=vk_uid&score=new_score
 
 Updates user score into db.
 If there is no such user in db - create it.
 """
-exports.user_score = (req, res) ->
+exports.set_user_score = (req, res) ->
+  pg.connect DATABASE_URL, (err, client, done) ->
+    if err
+      console.log "DB_set_user_score connection: " + err
+      res.send {error: 'Cannot update user score: ' + err}
+      return done()
+    
+    # TOO BAD: doesn't escape data from client!
+    q = "UPDATE users SET score = score + (" + req.body.score + ") WHERE vk_id=" + req.body.uid + " RETURNING score;"
+    console.log q
+    client.query q, (err, result) ->
+      console.log "User " + req.body.uid + " score after update: " + result
+      if err || result.rows.length == 0
+        console.log "DB_set_user_score update" + err
+        res.send {error: 'Cannot update user score: ' + err}
+        return done()
+      res.send {score: result.rows[0].score}
+      done() 
+      
+
+"""
+get /user_score?uid=vk_uid&score=vk_score
+
+Returns current user score for user
+If there is no such user in the db - create it using score from params
+
+param: vk_uid - user id from vk
+       score - user score from vk db
+"""      
+exports.get_user_score = (req, res) ->
   pg.connect DATABASE_URL, (err, client, done) ->
     if err
       console.log err
+      res.send {error: 'Cannot connect to db:' + err}
       return done()
 
-    query = client.query "SELECT * FROM users WHERE id=" + req.body.uid + ";", (err, reslt) ->
+    client.query "SELECT * FROM users WHERE vk_id=" + req.query.uid + ";", (err, result) ->
       if err
-        console.log err
+        console.log "get_user_score: select user with vk_id=" + req.query.uid + ". Got error:   " + err
+        res.send {error: 'User query error: ' + err }
         return done()
+        
       console.log "Get from db: ", result
-      if result.length == 0
+      if result.rows.length == 0
         # create new user
-        client.query "INSERT INTO users VALUES (" + req.body.uid + ", " + req.body.score + ");", (err, reslt) ->
+        console.log "Uid: " + req.query.uid + ", score: " + req.query.score
+        client.query "INSERT INTO users (vk_id, score) VALUES (" + req.query.uid + ", " + req.query.score + ");", (err, result) ->
           if err
             console.log err
+            res.send {error: 'Cannot create a new user: ' + err}
             return done()
-          return
+          res.send {score: req.query.score}
+      else
+        res.send {score: result.rows[0].score}
+      done()
         
-      
+        
+"""
+get /load_new_photos
+
+Gets new batch of photos from flickr,
+recieves geoinfo for each photo and
+returns to client.
+"""      
 exports.load_new_photos = (req, res) ->
   #res.setHeader { 'name': 'Content-Type', 'value': 'application/json' }
   console.log 'Ready to fetch new photos...'
