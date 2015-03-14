@@ -89,8 +89,8 @@ $ ->
   # Score manipulations
   change_score = (val) ->
     #if score + val > 0 then score += val else score = 0
-    saved_score += val
-    score += val
+    saved_score += parseInt(val, 10)
+    score += parseInt(val, 10)
     if change_score_count % 2 == 0
       try
         console.log "Current user id: " + uid
