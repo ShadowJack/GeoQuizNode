@@ -26,12 +26,12 @@ $ ->
   # Time left  
   
   resumeTimer = ->
-    timer = setInterval(update_bar, 1000)
+    timer = setInterval(update_bar, 500)
   
   cleanTimer = ->
-    console.log 'get in Stop timer()'
+    #console.log 'get in Stop timer()'
     if timer != null
-      console.log 'timer was not null'
+      #console.log 'timer was not null'
       clearInterval(timer)
       timer = null
       
@@ -44,8 +44,8 @@ $ ->
     
   
   update_bar = ->
-    if $('#timebar').width() > ( full_width / 20 )
-      $('#timebar').css 'width', $('#timebar').width() - ( full_width / 20 )
+    if $('#timebar').width() > ( full_width / 40 )
+      $('#timebar').css 'width', $('#timebar').width() - ( full_width / 40 )
     else
       # show the right answere
       cleanTimer()

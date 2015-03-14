@@ -1,3 +1,4 @@
+#TODO: сделать плавную анимацию
 
 flickr_api_key = '5b05639ce9be5ae209e85779df2d66dd'
 geonames_username = 'shadowjack'
