@@ -19,13 +19,16 @@ module.exports = (app) ->
     routeMvc('index', 'send_photo_to_vk', req, res, next)
   
   app.post '/user_score', (req, res, next) ->
-    routeMvc('index', 'set_user_score', req, res, next)
+    routeMvc('user', 'set_user_score', req, res, next)
   
   app.get '/user_score', (req, res, next) ->
-    routeMvc('index', 'get_user_score', req, res, next)
+    routeMvc('user', 'get_user_score', req, res, next)
   
   app.post '/thumbs', (req, res, next) ->
     routeMvc('index', 'thumbs', req, res, next)
+  
+  app.get '/leaders', (req, res, next) ->
+    routeMvc('user', 'leaders', req, res, next)
 
   #   - _/**:controller**_  -> controllers/***:controller***/index method
   app.all '/:controller', (req, res, next) ->

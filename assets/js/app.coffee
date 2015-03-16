@@ -99,6 +99,7 @@ $ ->
             console.log result.error
           else
             saved_score = 0
+            get_leaders()
       catch e
         console.log e
     
@@ -119,6 +120,31 @@ $ ->
     $('#score').fadeOut 300, ->
       $('#score').html score
       $('#score').fadeIn 300
+    
+  get_leaders = ->
+    $.get '/leaders', {}, (resp_data) ->
+      if resp_data.error
+        # do not show leaderboard
+        console.log 'Error while getting leaders' + resp_data.error
+      else
+        leaderboard = $('#leader_board')
+        leaderboard.empty()
+        
+        user_ids = resp_data.result.map (val, i, arr) -> val.vk_id
+
+        VK.api 'users.get', {user_ids: user_ids.join(), fields: 'photo_50' }, (data) ->
+          if data.error
+            console.log data.error
+            return false
+          else
+            leaders = data.response
+
+          for leader, i in leaders
+            console.log 'Top' + (i+1), leader.id, resp_data.result[i].score
+            leader_div = document.createElement('div')
+            leader_div.className = 'leader'
+            leader_div.innerHTML = 'Top' + (i + 1) + '<br/>Name: ' + leader.first_name + '<br/>Last name: ' + leader.last_name + '<br/>score: ' + resp_data.result[i].score
+            leaderboard.append(leader_div)
   
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`
   # The most complicated logic - get new set of photos and display new photo
@@ -421,8 +447,6 @@ $ ->
       removePauseScreen()
     
     VK.api 'storage.get', {key: 'score'}, (data) ->
-      #TODO: send data to server, if there is no such user on server, than we create it
-      # if not - we send it actual score to the app
       if data.response
         if data.response != ''
           score = parseInt data.response
@@ -440,8 +464,7 @@ $ ->
         console.log 'Error: ' + JSON.stringify(data.error)
         window.top.location=window.top.location
     
-    #TODO: get info about leaders and add them in leaderboard
-    #$.post '/user_score', {uid: uid, score: score}
+    get_leaders()
   # If the initialization of VK JSapi wasn't successful then reload page and try gain
   #
   onVkInitFail = ->
