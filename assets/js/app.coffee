@@ -138,12 +138,23 @@ $ ->
             return false
           else
             leaders = data.response
-
+          
+          console.log 'Leaders count: ', leaders.length
+          
           for leader, i in leaders
             console.log 'Top' + (i+1), leader.id, resp_data.result[i].score
             leader_div = document.createElement('div')
             leader_div.className = 'leader'
-            leader_div.innerHTML = 'Top' + (i + 1) + '<br/>Name: ' + leader.first_name + '<br/>Last name: ' + leader.last_name + '<br/>score: ' + resp_data.result[i].score
+            leader_div.innerHTML = '<div class="first-name">' + leader.first_name + '</div>' +
+                                   '<div class="last-name">' + leader.last_name + '</div>' +
+                                   '<div class="user-photo"><img src="' + leader.photo_50 + '"></img></div>' + 
+                                   '<div class="score">' + resp_data.result[i].score + '</div>'
+            if i == 0
+              leader_div.className += ' top1'
+            else if i == 1
+              leader_div.className += ' top2'
+            else if i == 2
+              leader_div.className += ' top3'
             leaderboard.append(leader_div)
   
   #`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`-`

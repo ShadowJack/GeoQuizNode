@@ -2,6 +2,33 @@
 @import 'lib/bootstrap/bootstrap.styl' // bootstrap-stylus
 @import 'nib'
 
+
+//------------------------------------------------
+// Fonts
+
+@font-face
+  font-family: 'hattori_hanzolight'
+  src: url('/fonts/Hattori_Hanzo-webfont.eot')
+  src: url('/fonts/Hattori_Hanzo-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/Hattori_Hanzo-webfont.woff') format('woff'),
+       url('/fonts/Hattori_Hanzo-webfont.ttf') format('truetype'),
+       url('/fonts/Hattori_Hanzo-webfont.svg#hattori_hanzolight') format('svg')
+  font-weight: normal
+  font-style: normal
+
+
+@font-face 
+  font-family: 'hattori_hanzolight_italic'
+  src: url('/fonts/Hattori_Hanzo_Italic-webfont.eot')
+  src: url('/fonts/Hattori_Hanzo_Italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/Hattori_Hanzo_Italic-webfont.woff') format('woff'),
+       url('/fonts/Hattori_Hanzo_Italic-webfont.ttf') format('truetype'),
+       url('/fonts/Hattori_Hanzo_Italic-webfont.svg#hattori_hanzolight_italic') format('svg')
+  font-weight: normal
+  font-style: normal
+
+
+
 //------------------------------------------------
 // General rules
 
@@ -9,6 +36,7 @@
   margin-top: 20px
   width: 700px
   position: relative
+  font-family: 'hattori_hanzolight', Helvetica, Arial, sans-serif
   
 .row
   margin-top: 10px
@@ -77,7 +105,7 @@ a:hover
   width: 250px
 
 button.pure-button.btn-fixwidth
-  margin-left: -45px
+  margin-left: -35px
 
 
 //------------------------------------------------
@@ -136,13 +164,16 @@ button.pure-button.btn-fixwidth
 // Score field
 
 #score
-  absolute: top 468px left 278px
+  absolute: top 468px left 288px
   width: 120px
   height: 30px
   border: 1px solid #C8D5DE
   font-size: 26px
   text-align: center
   padding-top: 8px
+
+#skip
+  margin-left: 17px
 
 //------------------------------------------------
 // Score changing information
@@ -166,15 +197,40 @@ button.pure-button.btn-fixwidth
 #leader_board
   width: 100%
   height: 120px
-  margin-top: 20px
-  background-color: #73D5C1
+  margin: 20px 0 0 5px
   
   .leader
-    width: 85px
+    width: 90px
     height: 110px
     float: left
-    border: 1px solid red
-    margin: 5px 5px 0px 5px
+    border: 1px solid #E6EAEE
+    margin: 5px 2px 0px 2px
+    font-size: 12px
+    
+    .first-name,
+    .last-name,
+    .user-photo,
+    .score
+      margin: 0 auto
+      text-align: center
+      overflow: hidden
+      text-overflow: clip
+    
+    .last-name
+      border-bottom: 1px solid #E6EAEE
+      margin-bottom: 2px
+  
+  .leader.top1
+    border-color: #FFCC00
+  .leader.top2
+    border-color: #959595
+  .leader.top3
+    border-color: #CD7F32
+    
+      
+    
+    
+
     
 
 //------------------------------------------------
@@ -182,6 +238,7 @@ button.pure-button.btn-fixwidth
 
 #photo_url
   text-align: center
+  padding-left: 10px
 
 #photo_url_container
   padding-right: 20px

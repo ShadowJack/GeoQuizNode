@@ -24,5 +24,3 @@ exports.setEnvironment = (env) ->
       process.env['DATABASE_URL'] = 'postgres://ubkjolguybaoep:xDt8jcTHKchp55eShePRoEwnir@ec2-54-197-241-97.compute-1.amazonaws.com:5432/d35pck0slu7rhd'
     else
       console.log "environment #{env} not found"
-
-#TODO: set the 'production' environment on heroku
