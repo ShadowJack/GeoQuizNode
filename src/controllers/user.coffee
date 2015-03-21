@@ -50,7 +50,7 @@ exports.get_user_score = (req, res) ->
         res.send {error: 'User query error: ' + err }
         return done()
         
-      console.log "Get from db: ", result
+      console.log "Get user from db: ", result
       if result.rows.length == 0
         # create new user
         console.log "Uid: " + req.query.uid + ", score: " + req.query.score

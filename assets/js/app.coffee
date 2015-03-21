@@ -449,6 +449,9 @@ $ ->
     app_id = document.location.search.match(/api_id=\d+/)[0].slice 7
     console.log "Current user id init: " + uid 
     
+    # VK.api 'storage.set', {key: 'score', value: ''}, (data) ->
+#       console.log 'removed vk storage data'
+#
     VK.addCallback 'onWindowBlur', ->
       console.log 'Pause game'
       pauseScreen()
@@ -458,21 +461,25 @@ $ ->
       removePauseScreen()
     
     VK.api 'storage.get', {key: 'score'}, (data) ->
-      if data.response
+      console.log 'From storage.get: ', data
+      if data.response != null
         if data.response != ''
           score = parseInt data.response
+        else
+          score = 0
 
         $.get '/user_score', {uid: uid, score: score}, (db_score) ->
           if db_score.error
             console.log "Error while getting user score: " + db_score.error
             window.top.location=window.top.location
           else
+            
             console.log "Got user user score from db: " + db_score.score
-            score = db_score.score
+            score = parseInt db_score.score
             #set the score
             $('#score').html score
       else
-        console.log 'Error: ' + JSON.stringify(data.error)
+        console.log 'Error getting score from storage: ' + JSON.stringify(data.error)
         window.top.location=window.top.location
     
     get_leaders()
